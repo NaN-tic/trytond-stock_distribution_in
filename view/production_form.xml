@@ -1,0 +1,9 @@
+<form>
+    <field name="number"/>
+    <field name="reference"/>
+    <field name="planned_date"/>
+    <newline/>
+    <field name="distribution_lines"/>
+    <field name="inputs"/>
+</form>
+

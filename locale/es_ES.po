@@ -1,0 +1,249 @@
+#
+msgid ""
+msgstr "Content-Type: text/plain; charset=utf-8\n"
+
+msgctxt "error:stock.distribution.in:"
+msgid "Distribution \"%s\" cannot be deleted because it is in \"Done\" state."
+msgstr "El reparto \"%s\" no se puede eliminar porqué está en estado \"Finalizado\"."
+
+msgctxt "error:stock.distribution.in:"
+msgid ""
+"The following moves in distribution \"%(distribution)s\" have a different quantity distributed:\n"
+"%(moves)s"
+msgstr ""
+"Los siguientes movimientos en el reparto \"%(distribution)s\" tienen una cantidad repartida diferente:\n"
+"%(moves)s"
+
+msgctxt "field:production,distribution_lines:"
+msgid "Distribution Lines"
+msgstr "Líneas de reparto"
+
+msgctxt "field:production,distribution_products:"
+msgid "Distribution Products"
+msgstr "Reparto de productos"
+
+msgctxt "field:stock.configuration,distribution_in_sequence:"
+msgid "Supplier Distribution Sequence"
+msgstr "Seqüencia de reparto de proveedor"
+
+msgctxt "field:stock.distribution.in,company:"
+msgid "Company"
+msgstr "Empresa"
+
+msgctxt "field:stock.distribution.in,create_date:"
+msgid "Create Date"
+msgstr "Fecha creación"
+
+msgctxt "field:stock.distribution.in,create_uid:"
+msgid "Create User"
+msgstr "Usuario creación"
+
+msgctxt "field:stock.distribution.in,effective_date:"
+msgid "Effective Date"
+msgstr "Fecha efectiva"
+
+msgctxt "field:stock.distribution.in,id:"
+msgid "ID"
+msgstr "ID"
+
+msgctxt "field:stock.distribution.in,lines:"
+msgid "Lines"
+msgstr "Líneas"
+
+#, fuzzy
+msgctxt "field:stock.distribution.in,locations:"
+msgid "Locations"
+msgstr "Ubicaciones"
+
+msgctxt "field:stock.distribution.in,moves:"
+msgid "Moves"
+msgstr "Movimientos"
+
+msgctxt "field:stock.distribution.in,number:"
+msgid "Number"
+msgstr "Número"
+
+msgctxt "field:stock.distribution.in,productions:"
+msgid "Productions"
+msgstr "Producciones"
+
+msgctxt "field:stock.distribution.in,rec_name:"
+msgid "Name"
+msgstr "Nombre"
+
+msgctxt "field:stock.distribution.in,state:"
+msgid "State"
+msgstr "Estado"
+
+#, fuzzy
+msgctxt "field:stock.distribution.in,warehouse:"
+msgid "Warehouse"
+msgstr "Almacén"
+
+msgctxt "field:stock.distribution.in,warehouse_input:"
+msgid "Warehouse Input"
+msgstr "Ubicación de entrada"
+
+msgctxt "field:stock.distribution.in,write_date:"
+msgid "Write Date"
+msgstr "Fecha modificación"
+
+msgctxt "field:stock.distribution.in,write_uid:"
+msgid "Write User"
+msgstr "Usuario modificación"
+
+msgctxt "field:stock.distribution.in.line,create_date:"
+msgid "Create Date"
+msgstr "Fecha creación"
+
+#, fuzzy
+msgctxt "field:stock.distribution.in.line,create_uid:"
+msgid "Create User"
+msgstr "Usuario creación"
+
+msgctxt "field:stock.distribution.in.line,distribution:"
+msgid "Distribution"
+msgstr "Reparto"
+
+msgctxt "field:stock.distribution.in.line,distribution_state:"
+msgid "Distribution State"
+msgstr "Estado del reparto"
+
+msgctxt "field:stock.distribution.in.line,id:"
+msgid "ID"
+msgstr "ID"
+
+msgctxt "field:stock.distribution.in.line,location:"
+msgid "Location"
+msgstr "Ubicación"
+
+msgctxt "field:stock.distribution.in.line,move:"
+msgid "Move"
+msgstr "Movimiento"
+
+msgctxt "field:stock.distribution.in.line,production:"
+msgid "Production"
+msgstr "Producción"
+
+msgctxt "field:stock.distribution.in.line,quantity:"
+msgid "Quantity"
+msgstr "Cantidad"
+
+msgctxt "field:stock.distribution.in.line,rec_name:"
+msgid "Name"
+msgstr "Nombre"
+
+msgctxt "field:stock.distribution.in.line,uom:"
+msgid "UoM"
+msgstr "UdM"
+
+msgctxt "field:stock.distribution.in.line,uom_digits:"
+msgid "UoM Digits"
+msgstr "Dígitos UdM"
+
+msgctxt "field:stock.distribution.in.line,write_date:"
+msgid "Write Date"
+msgstr "Fecha modificación"
+
+msgctxt "field:stock.distribution.in.line,write_uid:"
+msgid "Write User"
+msgstr "Usuario modificación"
+
+msgctxt "field:stock.location,distribution_lines:"
+msgid "Distribution Lines"
+msgstr "Líneas de reparto"
+
+msgctxt "field:stock.location,distribution_products:"
+msgid "Distribution Products"
+msgstr "Productos de reparto"
+
+msgctxt "field:stock.move,distribution:"
+msgid "Distribution"
+msgstr "Reparto"
+
+msgctxt "field:stock.move,distribution_lines:"
+msgid "Distribution Lines"
+msgstr "Líneas de reparto"
+
+msgctxt "field:stock.move,distribution_locations:"
+msgid "Distribution Locations"
+msgstr "Ubicaciones de reparto"
+
+msgctxt "field:stock.move,distribution_productions:"
+msgid "Distribution Productions"
+msgstr "Producciones de reparto"
+
+msgctxt "model:ir.action,name:act_distribution_in"
+msgid "Supplier Distribution"
+msgstr "Reparto de proveedor"
+
+msgctxt "model:ir.action,name:act_move_form"
+msgid "Moves"
+msgstr "Movimientos"
+
+msgctxt "model:ir.action,name:act_production_form"
+msgid "Productions"
+msgstr "Producciones"
+
+msgctxt "model:ir.action,name:act_purchase_distribution_form"
+msgid "Supplier Distributions"
+msgstr "Repartos de proveedor"
+
+msgctxt "model:ir.action,name:act_purchase_form"
+msgid "Purchases"
+msgstr "Compras"
+
+msgctxt "model:ir.sequence,name:sequence_distribution_in"
+msgid "Supplier Distribution"
+msgstr "Reparto de proveedor"
+
+msgctxt "model:ir.sequence.type,name:sequence_type_distribution_in"
+msgid "Supplier Distribution"
+msgstr "Reparto de proveedor"
+
+msgctxt "model:ir.ui.menu,name:menu_distribution_in"
+msgid "Supplier Distribution"
+msgstr "Reparto de proveedor"
+
+msgctxt "model:stock.distribution.in,name:"
+msgid "Supplier Distribution"
+msgstr "Reparto de proveedor"
+
+msgctxt "model:stock.distribution.in.line,name:"
+msgid "Distribution In Line"
+msgstr "Línea de reparto de proveedor"
+
+msgctxt "selection:stock.distribution.in,state:"
+msgid "Done"
+msgstr "Finalizar"
+
+msgctxt "selection:stock.distribution.in,state:"
+msgid "Draft"
+msgstr "Borrador"
+
+msgctxt "selection:stock.distribution.in.line,distribution_state:"
+msgid "Done"
+msgstr "Finalizar"
+
+msgctxt "selection:stock.distribution.in.line,distribution_state:"
+msgid "Draft"
+msgstr "Borrador"
+
+msgctxt "view:stock.configuration:"
+msgid "Distribution"
+msgstr "Reparto"
+
+msgctxt "view:stock.distribution.in:"
+msgid "Distribute"
+msgstr "Repartir"
+
+msgctxt "view:stock.distribution.in:"
+msgid "Do"
+msgstr "Finalizar"
+
+msgctxt "view:stock.distribution.in:"
+msgid ""
+"This process is irreversible. Are you sure you want to confirm this "
+"distribution?"
+msgstr ""
+"El proceso es irreversible. Está seguro que quiere confirmar este reparto?"

@@ -1,0 +1,247 @@
+#
+msgid ""
+msgstr "Content-Type: text/plain; charset=utf-8\n"
+
+msgctxt "error:stock.distribution.in:"
+msgid "Distribution \"%s\" cannot be deleted because it is in \"Done\" state."
+msgstr "El repartiment \"%s\" no es pot eliminar perquè està en estat \"Finalitzat\"."
+
+msgctxt "error:stock.distribution.in:"
+msgid ""
+"The following moves in distribution \"%(distribution)s\" have a different quantity distributed:\n"
+"%(moves)s"
+msgstr ""
+"Els següents moviments de la distribució \"%(distribution)s\" tenen una quantitat distribuïda diferent:\n"
+"%(moves)s"
+
+msgctxt "field:production,distribution_lines:"
+msgid "Distribution Lines"
+msgstr "Línies de repartiment"
+
+msgctxt "field:production,distribution_products:"
+msgid "Distribution Products"
+msgstr "Repartiment de productes"
+
+msgctxt "field:stock.configuration,distribution_in_sequence:"
+msgid "Supplier Distribution Sequence"
+msgstr "Seqüència de repartiment de proveïdor"
+
+msgctxt "field:stock.distribution.in,company:"
+msgid "Company"
+msgstr "Empresa"
+
+msgctxt "field:stock.distribution.in,create_date:"
+msgid "Create Date"
+msgstr "Data creació"
+
+msgctxt "field:stock.distribution.in,create_uid:"
+msgid "Create User"
+msgstr "Usuari creació"
+
+msgctxt "field:stock.distribution.in,effective_date:"
+msgid "Effective Date"
+msgstr "Data efectiva"
+
+msgctxt "field:stock.distribution.in,id:"
+msgid "ID"
+msgstr "ID"
+
+msgctxt "field:stock.distribution.in,lines:"
+msgid "Lines"
+msgstr "Línies"
+
+msgctxt "field:stock.distribution.in,locations:"
+msgid "Locations"
+msgstr "Ubicacions"
+
+msgctxt "field:stock.distribution.in,moves:"
+msgid "Moves"
+msgstr "Moviments"
+
+msgctxt "field:stock.distribution.in,number:"
+msgid "Number"
+msgstr "Número"
+
+msgctxt "field:stock.distribution.in,productions:"
+msgid "Productions"
+msgstr "Produccions"
+
+msgctxt "field:stock.distribution.in,rec_name:"
+msgid "Name"
+msgstr "Nom"
+
+msgctxt "field:stock.distribution.in,state:"
+msgid "State"
+msgstr "Estat"
+
+msgctxt "field:stock.distribution.in,warehouse:"
+msgid "Warehouse"
+msgstr "Magatzem"
+
+msgctxt "field:stock.distribution.in,warehouse_input:"
+msgid "Warehouse Input"
+msgstr "Magatzem entrada"
+
+msgctxt "field:stock.distribution.in,write_date:"
+msgid "Write Date"
+msgstr "Data modificació"
+
+msgctxt "field:stock.distribution.in,write_uid:"
+msgid "Write User"
+msgstr "Usuari modificació"
+
+msgctxt "field:stock.distribution.in.line,create_date:"
+msgid "Create Date"
+msgstr "Data creació"
+
+msgctxt "field:stock.distribution.in.line,create_uid:"
+msgid "Create User"
+msgstr "Usuari creació"
+
+msgctxt "field:stock.distribution.in.line,distribution:"
+msgid "Distribution"
+msgstr "Repartiment"
+
+msgctxt "field:stock.distribution.in.line,distribution_state:"
+msgid "Distribution State"
+msgstr "Estat de la repartiment"
+
+msgctxt "field:stock.distribution.in.line,id:"
+msgid "ID"
+msgstr "ID"
+
+msgctxt "field:stock.distribution.in.line,location:"
+msgid "Location"
+msgstr "Ubicació"
+
+msgctxt "field:stock.distribution.in.line,move:"
+msgid "Move"
+msgstr "Moviment"
+
+msgctxt "field:stock.distribution.in.line,production:"
+msgid "Production"
+msgstr "Producció"
+
+msgctxt "field:stock.distribution.in.line,quantity:"
+msgid "Quantity"
+msgstr "Quantitat"
+
+msgctxt "field:stock.distribution.in.line,rec_name:"
+msgid "Name"
+msgstr "Nom"
+
+msgctxt "field:stock.distribution.in.line,uom:"
+msgid "UoM"
+msgstr "UdM"
+
+msgctxt "field:stock.distribution.in.line,uom_digits:"
+msgid "UoM Digits"
+msgstr "Dígits UdM"
+
+msgctxt "field:stock.distribution.in.line,write_date:"
+msgid "Write Date"
+msgstr "Data modificació"
+
+msgctxt "field:stock.distribution.in.line,write_uid:"
+msgid "Write User"
+msgstr "Usuari modificació"
+
+msgctxt "field:stock.location,distribution_lines:"
+msgid "Distribution Lines"
+msgstr "Línies de repartiment"
+
+msgctxt "field:stock.location,distribution_products:"
+msgid "Distribution Products"
+msgstr "Repartiment de productes"
+
+msgctxt "field:stock.move,distribution:"
+msgid "Distribution"
+msgstr "Repartiment"
+
+msgctxt "field:stock.move,distribution_lines:"
+msgid "Distribution Lines"
+msgstr "Línies de repartiment"
+
+msgctxt "field:stock.move,distribution_locations:"
+msgid "Distribution Locations"
+msgstr "Ubicacions de repartiment"
+
+msgctxt "field:stock.move,distribution_productions:"
+msgid "Distribution Productions"
+msgstr "Produccions de repartiment"
+
+msgctxt "model:ir.action,name:act_distribution_in"
+msgid "Supplier Distribution"
+msgstr "Repartiment de proveïdor"
+
+msgctxt "model:ir.action,name:act_move_form"
+msgid "Moves"
+msgstr "Moviments"
+
+msgctxt "model:ir.action,name:act_production_form"
+msgid "Productions"
+msgstr "Produccions"
+
+msgctxt "model:ir.action,name:act_purchase_distribution_form"
+msgid "Supplier Distributions"
+msgstr "Repartiment de proveïdor"
+
+msgctxt "model:ir.action,name:act_purchase_form"
+msgid "Purchases"
+msgstr "Compres"
+
+msgctxt "model:ir.sequence,name:sequence_distribution_in"
+msgid "Supplier Distribution"
+msgstr "Repartiment de proveïdor"
+
+msgctxt "model:ir.sequence.type,name:sequence_type_distribution_in"
+msgid "Supplier Distribution"
+msgstr "Repartiment de proveïdor"
+
+msgctxt "model:ir.ui.menu,name:menu_distribution_in"
+msgid "Supplier Distribution"
+msgstr "Repartiment de proveïdor"
+
+msgctxt "model:stock.distribution.in,name:"
+msgid "Supplier Distribution"
+msgstr "Repartiment de proveïdor"
+
+msgctxt "model:stock.distribution.in.line,name:"
+msgid "Distribution In Line"
+msgstr "Línia de repartiment de proveïdor"
+
+msgctxt "selection:stock.distribution.in,state:"
+msgid "Done"
+msgstr "Finalitzat"
+
+msgctxt "selection:stock.distribution.in,state:"
+msgid "Draft"
+msgstr "Esborrany"
+
+msgctxt "selection:stock.distribution.in.line,distribution_state:"
+msgid "Done"
+msgstr "Finalitzat"
+
+msgctxt "selection:stock.distribution.in.line,distribution_state:"
+msgid "Draft"
+msgstr "Esborrany"
+
+msgctxt "view:stock.configuration:"
+msgid "Distribution"
+msgstr "Repartiment"
+
+msgctxt "view:stock.distribution.in:"
+msgid "Distribute"
+msgstr "Reparteix"
+
+msgctxt "view:stock.distribution.in:"
+msgid "Do"
+msgstr "Finalitza"
+
+msgctxt "view:stock.distribution.in:"
+msgid ""
+"This process is irreversible. Are you sure you want to confirm this "
+"distribution?"
+msgstr ""
+"Aquest procés és irreversible. Esteu segurs de voler confirmar aquest "
+"repartiment?"

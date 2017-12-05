@@ -1,0 +1,13 @@
+<form>
+    <label name="product"/>
+    <field name="product"/>
+    <label name="quantity"/>
+    <field name="quantity"/>
+    <field name="distribution_lines" colspan="4"/>
+    <label name="planned_date"/>
+    <field name="planned_date"/>
+    <label name="supplier"/>
+    <field name="supplier"/>
+    <label name="origin"/>
+    <field name="origin"/>
+</form>

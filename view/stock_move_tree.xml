@@ -1,0 +1,8 @@
+<tree>
+    <field name="product"/>
+    <field name="quantity"/>
+    <field name="supplier"/>
+    <field name="planned_date"/>
+    <field name="distribution_productions"/>
+    <field name="distribution_locations"/>
+</tree>

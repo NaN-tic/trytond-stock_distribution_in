@@ -1,0 +1,4 @@
+<tree>
+    <field name="name"/>
+    <field name="distribution_products"/>
+</tree>

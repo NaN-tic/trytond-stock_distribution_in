@@ -1,0 +1,166 @@
+<tryton>
+    <data>
+        <!--
+        <record model="ir.ui.view" id="distribution_in_view_tree">
+            <field name="model">stock.distribution.in</field>
+            <field name="inherit" ref="stock.shipment_out_view_tree"/>
+            <field name="name">shipment_out_tree</field>
+        </record>
+        -->
+
+        <record model="ir.ui.view" id="distribution_in_view_tree">
+            <field name="model">stock.distribution.in</field>
+            <field name="type">tree</field>
+            <field name="name">distribution_in_tree</field>
+        </record>
+        <record model="ir.ui.view" id="distribution_in_view_form">
+            <field name="model">stock.distribution.in</field>
+            <field name="type">form</field>
+            <field name="name">distribution_in_form</field>
+        </record>
+        <record model="ir.action.act_window" id="act_distribution_in">
+            <field name="name">Supplier Distribution</field>
+            <field name="res_model">stock.distribution.in</field>
+        </record>
+        <record model="ir.action.act_window.view" id="act_distribution_in_tree">
+            <field name="sequence" eval="10"/>
+            <field name="view" ref="distribution_in_view_tree"/>
+            <field name="act_window" ref="act_distribution_in"/>
+        </record>
+        <record model="ir.action.act_window.view" id="act_distribution_in_form">
+            <field name="sequence" eval="10"/>
+            <field name="view" ref="distribution_in_view_form"/>
+            <field name="act_window" ref="act_distribution_in"/>
+        </record>
+
+        <menuitem parent="stock.menu_stock" sequence="10"
+            action="act_distribution_in"
+            id="menu_distribution_in"/>
+
+        <record model="ir.ui.view" id="distribution_in_line_view_tree">
+            <field name="model">stock.distribution.in.line</field>
+            <field name="type">tree</field>
+            <field name="name">distribution_in_line_tree</field>
+        </record>
+        <record model="ir.ui.view" id="distribution_in_line_view_form">
+            <field name="model">stock.distribution.in.line</field>
+            <field name="type">form</field>
+            <field name="name">distribution_in_line_form</field>
+        </record>
+
+        <record model="ir.ui.view" id="stock_move_view_tree">
+            <field name="model">stock.move</field>
+            <field name="type">tree</field>
+            <field name="priority" eval="20"/>
+            <field name="name">stock_move_tree</field>
+        </record>
+        <record model="ir.ui.view" id="stock_move_view_form">
+            <field name="model">stock.move</field>
+            <field name="type">form</field>
+            <field name="priority" eval="20"/>
+            <field name="name">stock_move_form</field>
+        </record>
+
+        <record model="ir.ui.view" id="production_view_tree">
+            <field name="model">production</field>
+            <field name="type">tree</field>
+            <field name="priority" eval="20"/>
+            <field name="name">production_tree</field>
+        </record>
+        <record model="ir.ui.view" id="production_view_form">
+            <field name="model">production</field>
+            <field name="type">form</field>
+            <field name="priority" eval="20"/>
+            <field name="name">production_form</field>
+        </record>
+
+        <record model="ir.ui.view" id="location_view_tree">
+            <field name="model">stock.location</field>
+            <field name="type">tree</field>
+            <field name="priority" eval="20"/>
+            <field name="name">location_tree</field>
+        </record>
+        <record model="ir.ui.view" id="location_view_form">
+            <field name="model">stock.location</field>
+            <field name="type">form</field>
+            <field name="priority" eval="20"/>
+            <field name="name">location_form</field>
+        </record>
+
+        <record model="ir.sequence.type" id="sequence_type_distribution_in">
+            <field name="name">Supplier Distribution</field>
+            <field name="code">stock.distribution.in</field>
+        </record>
+        <record model="ir.sequence.type-res.group"
+            id="sequence_type_distribution_in_group_admin">
+            <field name="sequence_type" ref="sequence_type_distribution_in"/>
+            <field name="group" ref="res.group_admin"/>
+        </record>
+        <record model="ir.sequence.type-res.group"
+            id="sequence_type_distribution_in_group_stock_admin">
+            <field name="sequence_type" ref="sequence_type_distribution_in"/>
+            <field name="group" ref="stock.group_stock_admin"/>
+        </record>
+
+        <record model="ir.sequence" id="sequence_distribution_in">
+            <field name="name">Supplier Distribution</field>
+            <field name="code">stock.distribution.in</field>
+        </record>
+
+        <!-- From distribution to moves -->
+        <record model="ir.action.act_window" id="act_move_form">
+            <field name="name">Moves</field>
+            <field name="res_model">stock.move</field>
+            <field name="domain" pyson="1"
+                eval="[('distribution', 'in', Eval('active_ids'))]"
+                />
+        </record>
+        <record model="ir.action.keyword" id="act_open_move_keyword1">
+            <field name="keyword">form_relate</field>
+            <field name="model">stock.distribution.in,-1</field>
+            <field name="action" ref="act_move_form"/>
+        </record>
+
+        <!-- From distribution to purchases -->
+        <record model="ir.action.act_window" id="act_purchase_form">
+            <field name="name">Purchases</field>
+            <field name="res_model">purchase.purchase</field>
+            <field name="domain" pyson="1"
+                eval="[('lines.moves.distribution', 'in', Eval('active_ids'))]"
+                />
+        </record>
+        <record model="ir.action.keyword" id="act_open_purchase_keyword1">
+            <field name="keyword">form_relate</field>
+            <field name="model">stock.distribution.in,-1</field>
+            <field name="action" ref="act_purchase_form"/>
+        </record>
+
+        <!-- From distribution to productions -->
+        <record model="ir.action.act_window" id="act_production_form">
+            <field name="name">Productions</field>
+            <field name="res_model">production</field>
+            <field name="domain" pyson="1"
+                eval="[('distribution_lines.distribution', 'in', Eval('active_ids'))]"
+                />
+        </record>
+        <record model="ir.action.keyword" id="act_open_production_keyword1">
+            <field name="keyword">form_relate</field>
+            <field name="model">stock.distribution.in,-1</field>
+            <field name="action" ref="act_production_form"/>
+        </record>
+
+        <!-- From purchase to distributions -->
+        <record model="ir.action.act_window" id="act_purchase_distribution_form">
+            <field name="name">Supplier Distributions</field>
+            <field name="res_model">stock.distribution.in</field>
+            <field name="domain" pyson="1"
+                eval="[('moves.purchase', 'in', Eval('active_ids'))]"
+                />
+        </record>
+        <record model="ir.action.keyword" id="act_open_purchase_distribution_keyword1">
+            <field name="keyword">form_relate</field>
+            <field name="model">purchase.purchase,-1</field>
+            <field name="action" ref="act_purchase_distribution_form"/>
+        </record>
+    </data>
+</tryton>

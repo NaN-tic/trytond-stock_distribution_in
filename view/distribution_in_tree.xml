@@ -1,0 +1,5 @@
+<tree>
+    <field name="number"/>
+    <field name="warehouse"/>
+    <field name="effective_date"/>
+</tree>

@@ -1,0 +1,6 @@
+<tree>
+    <field name="number"/>
+    <field name="reference"/>
+    <field name="planned_date"/>
+    <field name="distribution_products"/>
+</tree>

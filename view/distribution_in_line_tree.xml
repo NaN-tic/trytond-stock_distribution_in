@@ -1,0 +1,7 @@
+<tree editable="bottom">
+    <field name="distribution"/>
+    <field name="move"/>
+    <field name="quantity"/>
+    <field name="production"/>
+    <field name="location"/>
+</tree>

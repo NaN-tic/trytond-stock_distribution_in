@@ -1,0 +1,14 @@
+<form>
+    <label name="distribution"/>
+    <field name="distribution"/>
+    <newline/>
+    <label name="move"/>
+    <field name="move"/>
+    <newline/>
+    <label name="quantity"/>
+    <field name="quantity"/>
+    <label name="production"/>
+    <field name="production"/>
+    <label name="location"/>
+    <field name="location"/>
+</form>

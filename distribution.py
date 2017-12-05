@@ -1,0 +1,379 @@
+from trytond.model import fields, ModelSQL, ModelView, Workflow
+from trytond.pyson import Eval, If
+from trytond.pool import PoolMeta, Pool
+from trytond.transaction import Transaction
+
+__all__ = ['Distribution', 'DistributionLine', 'Move', 'Production', 'Location']
+
+STATES = [
+    ('draft', 'Draft'),
+    ('done', 'Done'),
+    ]
+
+# TODO: We should treat stock.distribution.in as a stock.shipment for moves so
+# dates are properly set
+
+
+class Distribution(Workflow, ModelSQL, ModelView):
+    'Supplier Distribution'
+    __name__ = 'stock.distribution.in'
+    _states = {
+        'readonly': Eval('state') != 'draft',
+        }
+    number = fields.Char('Number', readonly=True)
+    effective_date = fields.Date('Effective Date', states=_states)
+    warehouse = fields.Many2One('stock.location', 'Warehouse', required=True,
+        domain=[('type', '=', 'warehouse')], states=_states)
+    warehouse_input = fields.Function(fields.Many2One('stock.location',
+            'Warehouse Input'),
+        'on_change_with_warehouse_input')
+    company = fields.Many2One('company.company', 'Company', required=True,
+        states=_states,
+        domain=[
+            ('id', If(Eval('context', {}).contains('company'), '=', '!='),
+                Eval('context', {}).get('company', -1)),
+            ],
+        depends=['state'])
+    moves = fields.One2Many('stock.move', 'distribution', 'Moves', add_remove=[
+            ('shipment', '=', None),
+            ('from_location.type', '=', 'supplier'),
+            ('state', '=', 'draft'),
+            ('distribution', '=', None),
+            ], domain=[
+            ('from_location.type', '=', 'supplier'),
+            ], states=_states, depends=['state'])
+    lines = fields.One2Many('stock.distribution.in.line', 'distribution',
+        'Lines', states=_states)
+    productions = fields.Many2Many('stock.distribution.in.line',
+        'distribution', 'production', 'Productions', readonly=True)
+    locations = fields.Many2Many('stock.distribution.in.line', 'distribution',
+        'location', 'Locations', readonly=True)
+    state = fields.Selection(STATES, 'State', readonly=True, required=True)
+
+    @staticmethod
+    def default_company():
+        return Transaction().context.get('company')
+
+    @staticmethod
+    def default_state():
+        return 'draft'
+
+    @classmethod
+    def default_warehouse(cls):
+        Location = Pool().get('stock.location')
+        locations = Location.search(cls.warehouse.domain)
+        if len(locations) == 1:
+            return locations[0].id
+
+    @classmethod
+    def default_warehouse_input(cls):
+        warehouse = cls.default_warehouse()
+        if warehouse:
+            return cls(warehouse=warehouse).on_change_with_warehouse_input()
+
+    @classmethod
+    def __setup__(cls):
+        super(Distribution, cls).__setup__()
+        cls._buttons.update({
+                'distribute': {
+                    'icon': 'tryton-refresh',
+                    'invisible': Eval('state') != 'draft',
+                    },
+                'do': {
+                    'icon': 'tryton-ok',
+                    'invisible': Eval('state') != 'draft',
+                    }
+                })
+        cls._transitions |= set((
+                ('draft', 'done'),
+                ))
+        cls._error_messages.update({
+                'move_quantity_mismatch': ('The following moves in '
+                    'distribution "%(distribution)s" have a different quantity '
+                    'distributed:\n%(moves)s'),
+                'cannot_delete_done': ('Distribution "%s" cannot be deleted '
+                    'because it is in "Done" state.'),
+                })
+
+    @classmethod
+    def create(cls, vlist):
+        pool = Pool()
+        Sequence = pool.get('ir.sequence')
+        Config = pool.get('stock.configuration')
+
+        vlist = [x.copy() for x in vlist]
+        config = Config(1)
+        for values in vlist:
+            if values.get('number') is None:
+                values['number'] = Sequence.get_id(
+                    config.distribution_in_sequence)
+        shipments = super(Distribution, cls).create(vlist)
+        return shipments
+
+    @classmethod
+    def copy(cls, distributions, default=None):
+        if default is None:
+            default = {}
+        default = default.copy()
+        default.setdefault('number')
+        default.setdefault('moves')
+        default.setdefault('lines')
+        return super(Move, cls).copy(distributions, default)
+
+    @classmethod
+    def delete(cls, distributions):
+        for distribution in distributions:
+            if distribution.state == 'done':
+                cls.raise_user_error('cannot_delete_done',
+                    distribution.rec_name)
+
+    @fields.depends('warehouse')
+    def on_change_with_warehouse_input(self, name=None):
+        if self.warehouse:
+            return self.warehouse.input_location.id
+
+    @classmethod
+    @ModelView.button
+    def distribute(cls, distributions):
+        pool = Pool()
+        Line = pool.get('stock.distribution.in.line')
+        Move = pool.get('stock.move')
+
+        to_remove = []
+        for distribution in distributions:
+            to_remove += [x for x in distribution.lines]
+        Line.delete(to_remove)
+
+        lines = []
+        for distribution in distributions:
+            for move in distribution.moves:
+                target_moves = Move.search([
+                        ('production_input', '!=', None),
+                        ('state', '=', 'draft'),
+                        ('product', '=', move.product.id),
+                        ], order=[('planned_date', 'ASC')])
+                remaining = move.quantity
+                for target_move in target_moves:
+                    quantity = min(remaining, target_move.quantity)
+                    if not quantity:
+                        break
+                    line = Line()
+                    line.distribution = distribution
+                    line.move = move
+                    line.quantity = quantity
+                    line.production = target_move.production_input
+                    lines.append(line)
+                    remaining -= quantity
+                if remaining:
+                    target_location = distribution.warehouse.storage_location
+                    for location in move.product.locations:
+                        if location.warehouse == distribution.warehouse:
+                            target_location = location.location
+                            break
+                    line = Line()
+                    line.distribution = distribution
+                    line.move = move
+                    line.quantity = remaining
+                    line.location = target_location
+                    lines.append(line)
+
+        Line.create([x._save_values for x in lines])
+
+    @classmethod
+    @ModelView.button
+    @Workflow.transition('done')
+    def do(cls, distributions):
+        pool = Pool()
+        Move = pool.get('stock.move')
+        Date = pool.get('ir.date')
+        Production = pool.get('production')
+        Line = pool.get('stock.distribution.in.line')
+        PurchaseLine = pool.get('purchase.line')
+        Purchase = pool.get('purchase.purchase')
+
+        to_save = []
+        to_copy = []
+        to_copy_lines = []
+        purchase_ids = set()
+        productions = set()
+        for distribution in distributions:
+            mismatches = []
+            for move in distribution.moves:
+                to_save.append(move)
+                quantity = 0.0
+                move_quantity = move.quantity
+                if isinstance(move.origin, PurchaseLine):
+                    purchase_ids.add(move.origin.purchase.id)
+
+                locations = {}
+                for line in move.distribution_lines:
+                    quantity += line.quantity
+                    location = line.location or move.to_location
+                    locations.setdefault(location, {
+                            'quantity': 0.0,
+                            'lines': [],
+                            })
+                    locations[location]['quantity'] += line.quantity
+                    locations[location]['lines'].append(line)
+
+                # Ensure move distribution line quantities match moves
+                # quantities
+                if move_quantity != quantity:
+                    mismatches.append({
+                            'move': move.rec_name,
+                            'move_quantity': move_quantity,
+                            'accumulated_quantity': quantity,
+                            })
+                    if len(mismatches) > 10:
+                        break
+
+                first = True
+                for location, data in locations.iteritems():
+                    if line.production:
+                        productions.add(line.production.id)
+                    if first:
+                        first = False
+                        move.quantity = data['quantity']
+                        move.to_location = location
+                        continue
+                    to_copy.append(move)
+                    to_copy_lines.append(line)
+
+
+            if mismatches:
+                cls.raise_user_error('move_quantity_mismatch', {
+                        'distribution': distribution.rec_name,
+                        'moves': '\n'.join([ '%s: %.0f != %.0f' % (x['move'],
+                                    x['move_quantity'],
+                                    x['accumulated_quantity'])
+                                for x in mismatches]),
+                        })
+
+        new_moves = Move.copy(to_copy)
+        for move, line, new in zip(to_copy, to_copy_lines, new_moves):
+            new.distribution = move.distribution
+            new.quantity = line.quantity
+            new.to_location = line.location or move.to_location
+            new.origin = move.origin
+            line.move = new
+
+        Move.save(new_moves)
+        Line.save(to_copy_lines)
+
+        Move.do(to_save + new_moves)
+        cls.write([x for x in distributions if not x.effective_date], {
+                'effective_date': Date.today(),
+                })
+        Production.assign_try(Production.browse(list(productions)))
+
+        Purchase.process(Purchase.browse(purchase_ids))
+
+
+
+class DistributionLine(ModelSQL, ModelView):
+    'Distribution In Line'
+    __name__ = 'stock.distribution.in.line'
+    _states = {
+        'readonly': Eval('distribution_state') != 'draft',
+        }
+    distribution = fields.Many2One('stock.distribution.in', 'Distribution',
+        required=True, ondelete='CASCADE')
+    move = fields.Many2One('stock.move', 'Move', required=True, states=_states)
+    quantity = fields.Float('Quantity', required=True, states=_states,
+        digits=(16, Eval('uom_digits', 2)), depends=['uom_digits'])
+    uom = fields.Function(fields.Many2One('product.uom', 'UoM'), 'get_uom')
+    uom_digits = fields.Function(fields.Integer('UoM Digits'),
+        'on_change_with_uom_digits')
+    production = fields.Many2One('production', 'Production', states=_states)
+    location = fields.Many2One('stock.location', 'Location', domain=[
+            ('type', 'in', ['storage', 'view']),
+            ], states=_states)
+    distribution_state = fields.Function(fields.Selection(STATES,
+                'Distribution State'), 'on_change_with_distribution_state')
+
+    def get_uom(self, name):
+        return self.move.uom.id
+
+    @fields.depends('move')
+    def on_change_with_uom_digits(self, name=None):
+        if self.move and self.move.uom:
+            return self.move.uom.digits
+        return 2
+
+    @fields.depends('distribution')
+    def on_change_with_distribution_state(self, name=None):
+        return self.distribution.state if self.distribution else 'draft'
+
+
+class Move:
+    __name__ = 'stock.move'
+    __metaclass__ = PoolMeta
+
+    distribution = fields.Many2One('stock.distribution.in', 'Distribution')
+    distribution_lines = fields.One2Many('stock.distribution.in.line', 'move',
+        'Distribution Lines')
+    distribution_productions = fields.Function(fields.Text(
+            'Distribution Productions'), 'get_distribution_productions')
+    distribution_locations = fields.Function(fields.Text(
+            'Distribution Locations'), 'get_distribution_locations')
+
+    @classmethod
+    def copy(cls, moves, default=None):
+        if default is None:
+            default = {}
+        default = default.copy()
+        default.setdefault('distribution', None)
+        default.setdefault('distribution_lines', None)
+        return super(Move, cls).copy(moves, default)
+
+    def get_distribution_productions(self, name):
+        return '\n'.join(['%.0f     %s' % (x.quantity, x.production.rec_name)
+                for x in self.distribution_lines if x.production])
+
+    def get_distribution_locations(self, name):
+        return '\n'.join(['%.0f     %s' % (x.quantity, x.location.rec_name)
+                for x in self.distribution_lines if x.location])
+
+
+class Production:
+    __name__ = 'production'
+    __metaclass__ = PoolMeta
+
+    distribution_lines = fields.One2Many('stock.distribution.in.line',
+        'production', 'Distribution Lines')
+    distribution_products = fields.Function(fields.Text(
+            'Distribution Products'), 'get_distribution_products')
+
+    @classmethod
+    def copy(cls, productions, default=None):
+        if default is None:
+            default = {}
+        default = default.copy()
+        default.setdefault('distribution_lines', None)
+        return super(Production, cls).copy(productions, default)
+
+    def get_distribution_products(self, name):
+        return '\n'.join(['%.0f     %s' % (x.quantity, x.move.product.code) for
+                x in self.distribution_lines])
+
+
+class Location:
+    __name__ = 'stock.location'
+    __metaclass__ = PoolMeta
+
+    distribution_lines = fields.One2Many('stock.distribution.in.line',
+        'location', 'Distribution Lines')
+    distribution_products = fields.Function(fields.Text(
+            'Distribution Products'), 'get_distribution_products')
+
+    @classmethod
+    def copy(cls, locations, default=None):
+        if default is None:
+            default = {}
+        default = default.copy()
+        default.setdefault('distribution_lines', None)
+        return super(Location, cls).copy(locations, default)
+
+    def get_distribution_products(self, name):
+        return '\n'.join(['%.0f     %s' % (x.quantity, x.move.product.code) for
+                x in self.distribution_lines])

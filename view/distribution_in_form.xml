@@ -1,0 +1,26 @@
+<form col="6">
+    <label name="number"/>
+    <field name="number"/>
+    <label name="warehouse"/>
+    <field name="warehouse"/>
+    <label name="effective_date"/>
+    <field name="effective_date"/>
+    <notebook colspan="6">
+        <page name="moves">
+            <field name="moves" colspan="4" view_ids="stock_distribution_in.stock_move_view_tree,stock_distribution_in.stock_move_view_form"/>
+        </page>
+        <page name="lines">
+            <field name="lines" colspan="4"/>
+        </page>
+        <page name="productions">
+	    <field name="productions" colspan="4" view_ids="stock_distribution_in.production_view_tree,stock_distribution_in.production_view_form"/>
+        </page>
+        <page name="locations">
+	    <field name="locations" colspan="4" view_ids="stock_distribution_in.location_view_tree,stock_distribution_in.location_view_form"/>
+        </page>
+    </notebook>
+    <label name="state"/>
+    <field name="state"/>
+    <button string="Distribute" name="distribute"/>
+    <button string="Do" name="do" confirm="This process is irreversible. Are you sure you want to confirm this distribution?"/>
+</form>
