@@ -19,7 +19,7 @@
             <field name="name">distribution_in_form</field>
         </record>
         <record model="ir.action.act_window" id="act_distribution_in">
-            <field name="name">Supplier Distribution</field>
+            <field name="name">Supplier Distributions</field>
             <field name="res_model">stock.distribution.in</field>
         </record>
         <record model="ir.action.act_window.view" id="act_distribution_in_tree">

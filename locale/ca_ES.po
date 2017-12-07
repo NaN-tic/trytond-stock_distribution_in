@@ -171,8 +171,8 @@ msgid "Distribution Productions"
 msgstr "Produccions de repartiment"
 
 msgctxt "model:ir.action,name:act_distribution_in"
-msgid "Supplier Distribution"
-msgstr "Repartiment de proveïdor"
+msgid "Supplier Distributions"
+msgstr "Repartiments de proveïdor"
 
 msgctxt "model:ir.action,name:act_move_form"
 msgid "Moves"
