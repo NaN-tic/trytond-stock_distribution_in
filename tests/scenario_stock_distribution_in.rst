@@ -177,6 +177,9 @@ Create distribution::
     >>> line3.quantity
     2.0
     >>> distribution.save()
+
+Ensure that a distribution not properly spread cannot be done::
+
     >>> line1.quantity = 7
     >>> line1.save()
     >>> distribution.click('do')  # doctest: +IGNORE_EXCEPTION_DETAIL
@@ -186,6 +189,23 @@ Create distribution::
     >>> distribution.reload()
     >>> distribution.state
     u'draft'
+
+Ensure that unlinking a move from the distribution automatically removes its
+distribution lines::
+
+    >>> distribution.click('distribute')
+    >>> incoming_move.reload()
+    >>> incoming_move.distribution_lines != []
+    True
+    >>> incoming_move.distribution = None
+    >>> incoming_move.save()
+    >>> incoming_move.distribution_lines
+    []
+    >>> incoming_move = StockMove(incoming_move.id)
+
+Check that when the distribution is done, everything is correct::
+
+    >>> distribution.moves.append(incoming_move)
     >>> distribution.click('distribute')
     >>> distribution.click('do')
     >>> distribution.state

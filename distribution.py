@@ -318,6 +318,23 @@ class Move:
             'Distribution Locations'), 'get_distribution_locations')
 
     @classmethod
+    def write(cls, *args):
+        """
+        When a stock move is unlinked from a distribution, delete all
+        distribution lines linked to the move.
+        """
+        DistributionLine = Pool().get('stock.distribution.in.line')
+        to_delete = []
+        actions = iter(args)
+        for moves, values in zip(actions, actions):
+            if 'distribution' in values and not values['distribution']:
+                for move in moves:
+                    to_delete += move.distribution_lines
+        if to_delete:
+            DistributionLine.delete(DistributionLine.browse(to_delete))
+        super(Move, cls).write(*args)
+
+    @classmethod
     def copy(cls, moves, default=None):
         if default is None:
             default = {}
