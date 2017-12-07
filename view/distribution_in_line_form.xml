@@ -1,7 +1,4 @@
 <form>
-    <label name="distribution"/>
-    <field name="distribution"/>
-    <newline/>
     <label name="move"/>
     <field name="move"/>
     <newline/>
