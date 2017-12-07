@@ -215,7 +215,7 @@ msgstr "Línea de reparto de proveedor"
 
 msgctxt "selection:stock.distribution.in,state:"
 msgid "Done"
-msgstr "Finalizar"
+msgstr "Finalizado"
 
 msgctxt "selection:stock.distribution.in,state:"
 msgid "Draft"
