@@ -32,6 +32,20 @@
             <field name="view" ref="distribution_in_view_form"/>
             <field name="act_window" ref="act_distribution_in"/>
         </record>
+        <record model="ir.action.act_window.domain" id="act_distribution_in_domain_draft">
+            <field name="name">Draft</field>
+            <field name="sequence" eval="10"/>
+            <field name="domain"
+                eval="[('state', '=', 'draft')]"
+                pyson="1"/>
+            <field name="act_window" ref="act_distribution_in"/>
+        </record>
+        <record model="ir.action.act_window.domain" id="act_distribution_in_domain_all">
+            <field name="name">All</field>
+            <field name="sequence" eval="9999"/>
+            <field name="domain"></field>
+            <field name="act_window" ref="act_distribution_in"/>
+        </record>
 
         <menuitem parent="stock.menu_stock" sequence="10"
             action="act_distribution_in"

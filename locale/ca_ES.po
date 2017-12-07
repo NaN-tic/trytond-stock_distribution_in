@@ -171,7 +171,7 @@ msgid "Distribution Productions"
 msgstr "Produccions de repartiment"
 
 msgctxt "model:ir.action,name:act_distribution_in"
-msgid "Supplier Distributions"
+msgid "Supplier Distribution"
 msgstr "Repartiments de proveïdor"
 
 msgctxt "model:ir.action,name:act_move_form"
@@ -189,6 +189,16 @@ msgstr "Repartiment de proveïdor"
 msgctxt "model:ir.action,name:act_purchase_form"
 msgid "Purchases"
 msgstr "Compres"
+
+msgctxt ""
+"model:ir.action.act_window.domain,name:act_distribution_in_domain_all"
+msgid "All"
+msgstr "Tot"
+
+msgctxt ""
+"model:ir.action.act_window.domain,name:act_distribution_in_domain_draft"
+msgid "Draft"
+msgstr "Esborrany"
 
 msgctxt "model:ir.sequence,name:sequence_distribution_in"
 msgid "Supplier Distribution"

@@ -50,7 +50,6 @@ msgctxt "field:stock.distribution.in,lines:"
 msgid "Lines"
 msgstr "Líneas"
 
-#, fuzzy
 msgctxt "field:stock.distribution.in,locations:"
 msgid "Locations"
 msgstr "Ubicaciones"
@@ -75,7 +74,6 @@ msgctxt "field:stock.distribution.in,state:"
 msgid "State"
 msgstr "Estado"
 
-#, fuzzy
 msgctxt "field:stock.distribution.in,warehouse:"
 msgid "Warehouse"
 msgstr "Almacén"
@@ -96,7 +94,6 @@ msgctxt "field:stock.distribution.in.line,create_date:"
 msgid "Create Date"
 msgstr "Fecha creación"
 
-#, fuzzy
 msgctxt "field:stock.distribution.in.line,create_uid:"
 msgid "Create User"
 msgstr "Usuario creación"
@@ -174,7 +171,7 @@ msgid "Distribution Productions"
 msgstr "Producciones de reparto"
 
 msgctxt "model:ir.action,name:act_distribution_in"
-msgid "Supplier Distributions"
+msgid "Supplier Distribution"
 msgstr "Repartos de proveedor"
 
 msgctxt "model:ir.action,name:act_move_form"
@@ -192,6 +189,16 @@ msgstr "Repartos de proveedor"
 msgctxt "model:ir.action,name:act_purchase_form"
 msgid "Purchases"
 msgstr "Compras"
+
+msgctxt ""
+"model:ir.action.act_window.domain,name:act_distribution_in_domain_all"
+msgid "All"
+msgstr "Todo"
+
+msgctxt ""
+"model:ir.action.act_window.domain,name:act_distribution_in_domain_draft"
+msgid "Draft"
+msgstr "Borrador"
 
 msgctxt "model:ir.sequence,name:sequence_distribution_in"
 msgid "Supplier Distribution"
