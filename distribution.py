@@ -1,5 +1,5 @@
 from trytond.model import fields, ModelSQL, ModelView, Workflow
-from trytond.pyson import Eval, If
+from trytond.pyson import Eval, If, Bool
 from trytond.pool import PoolMeta, Pool
 from trytond.transaction import Transaction
 
@@ -276,20 +276,61 @@ class DistributionLine(ModelSQL, ModelView):
     _states = {
         'readonly': Eval('distribution_state') != 'draft',
         }
-    distribution = fields.Many2One('stock.distribution.in', 'Distribution',
-        required=True, ondelete='CASCADE')
-    move = fields.Many2One('stock.move', 'Move', required=True, states=_states)
+    _depends = ['distribution_state']
+
+    distribution = fields.Function(fields.Many2One('stock.distribution.in',
+            'Distribution'), 'get_distribution', searcher='search_distribution')
+    move = fields.Many2One('stock.move', 'Move', required=True, states=_states,
+        depends=_depends)
     quantity = fields.Float('Quantity', required=True, states=_states,
-        digits=(16, Eval('uom_digits', 2)), depends=['uom_digits'])
+        digits=(16, Eval('uom_digits', 2)), depends=_depends + ['uom_digits'])
     uom = fields.Function(fields.Many2One('product.uom', 'UoM'), 'get_uom')
     uom_digits = fields.Function(fields.Integer('UoM Digits'),
         'on_change_with_uom_digits')
-    production = fields.Many2One('production', 'Production', states=_states)
+    production = fields.Many2One('production', 'Production', states={
+            'readonly': ((Eval('distribution_state') != 'draft')
+                | (Bool(Eval('location')) == True))
+            }, depends=['distribution_state', 'location'])
     location = fields.Many2One('stock.location', 'Location', domain=[
             ('type', 'in', ['storage', 'view']),
-            ], states=_states)
+            ], states={
+            'readonly': ((Eval('distribution_state') != 'draft')
+                | (Bool(Eval('production')) == True))
+            }, depends=['distribution_state', 'production'])
     distribution_state = fields.Function(fields.Selection(STATES,
                 'Distribution State'), 'on_change_with_distribution_state')
+
+
+    @classmethod
+    def __setup__(cls):
+        super(DistributionLine, cls).__setup__()
+        cls._error_messages.update({
+                'only_production_or_location': ('Distribution line "%s" '
+                    'must have one of "Production" or "Location" fields '
+                    'empty.'),
+                'empty_production_and_location': ('Distribution line "%s" '
+                    'must have a value in one of "Production" or "Location" '
+                    'fields.'),
+                })
+
+    @classmethod
+    def validate(cls, lines):
+        for line in lines:
+            line.check_production_location()
+
+    def check_production_location(self):
+        if self.production and self.location:
+            self.raise_user_error('only_production_or_location', self.rec_name)
+        if not self.production and not self.location:
+            self.raise_user_error('empty_production_and_location',
+                self.rec_name)
+
+    def get_distribution(self, name):
+        return self.move.distribution.id if self.move.distribution else None
+
+    @classmethod
+    def search_distribution(cls, name, clause):
+        return [('move.' + clause[0],) + clause[1:]]
 
     def get_uom(self, name):
         return self.move.uom.id
@@ -300,9 +341,11 @@ class DistributionLine(ModelSQL, ModelView):
             return self.move.uom.digits
         return 2
 
-    @fields.depends('distribution')
+    @fields.depends('move')
     def on_change_with_distribution_state(self, name=None):
-        return self.distribution.state if self.distribution else 'draft'
+        if self.move and self.move.distribution:
+            return self.move.distribution.state
+        return 'draft'
 
 
 class Move:
