@@ -403,6 +403,10 @@ class Production:
         'production', 'Distribution Lines')
     distribution_products = fields.Function(fields.Text(
             'Distribution Products'), 'get_distribution_products')
+    distribution_assigned_products = fields.Function(fields.Text(
+            'Other Assigned Products'), 'get_distribution_assigned_products')
+    distribution_pending_products = fields.Function(fields.Text(
+            'Other Pending Products'), 'get_distribution_pending_products')
 
     @classmethod
     def copy(cls, productions, default=None):
@@ -415,6 +419,58 @@ class Production:
     def get_distribution_products(self, name):
         return '\n'.join(['%.0f     %s' % (x.quantity, x.move.product.code) for
                 x in self.distribution_lines])
+
+    def get_distribution_assigned_products(self, name):
+        pool = Pool()
+        Move = pool.get('stock.move')
+        Location = pool.get('stock.location')
+
+        locations = Location.search([
+                ('parent', 'child_of', self.warehouse.storage_location.id),
+                ])
+        moves = Move.search([
+                ('production_input', '=', self.id),
+                ('from_location', 'in', [x.id for x in locations]),
+                ('state', '=', 'assigned'),
+                ])
+        products = {}
+        for move in moves:
+            products.setdefault(move.product, 0.0)
+            products[move.product] += move.internal_quantity
+        for line in self.distribution_lines:
+            if line.distribution_state != 'done':
+                continue
+            product = line.move.product
+            if not product in products:
+                continue
+            products[product] -= line.quantity
+        return '\n'.join(['%.0f     %s' % (quantity, product.code) for product,
+                quantity in products.iteritems() if quantity > 0])
+
+    def get_distribution_pending_products(self, name):
+        pool = Pool()
+        Move = pool.get('stock.move')
+        Location = pool.get('stock.location')
+
+        locations = Location.search([
+                ('parent', 'child_of', self.warehouse.storage_location.id),
+                ])
+        moves = Move.search([
+                ('production_input', '=', self.id),
+                ('from_location', 'in', [x.id for x in locations]),
+                ('state', '=', 'draft'),
+                ])
+        products = {}
+        for move in moves:
+            products.setdefault(move.product, 0.0)
+            products[move.product] += move.internal_quantity
+        for line in self.distribution_lines:
+            product = line.move.product
+            if not product in products:
+                continue
+            products[product] -= line.quantity
+        return '\n'.join(['%.0f     %s' % (quantity, product.code) for product,
+                quantity in products.iteritems() if quantity > 0])
 
 
 class Location:

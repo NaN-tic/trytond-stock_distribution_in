@@ -3,4 +3,6 @@
     <field name="reference"/>
     <field name="planned_date"/>
     <field name="distribution_products"/>
+    <field name="distribution_assigned_products"/>
+    <field name="distribution_pending_products"/>
 </tree>
