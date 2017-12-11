@@ -102,7 +102,7 @@ Create payment term::
     >>> payment_term = create_payment_term()
     >>> payment_term.save()
 
-Create productions::
+Create one production in wait state::
 
     >>> Production = Model.get('production')
     >>> production1 = Production()
@@ -117,7 +117,12 @@ Create productions::
     >>> input_move.company = company
     >>> input_move.unit_price = Decimal('1')
     >>> input_move.currency = company.currency
-    >>> production1.save()
+    >>> production1.click('wait')
+    >>> production1.state
+    u'waiting'
+
+Create another production in draft state::
+
     >>> production2 = Production()
     >>> input_move = production2.inputs.new()
     >>> input_move.product = product
@@ -131,6 +136,8 @@ Create productions::
     >>> input_move.unit_price = Decimal('1')
     >>> input_move.currency = company.currency
     >>> production2.save()
+    >>> production2.state
+    u'draft'
 
 Create purchase::
 
@@ -233,8 +240,18 @@ Check that when the distribution is done, everything is correct::
 
 Check invoice lines exist::
 
-    >> purchase.reload()
-    >> purchase.shipment_state
+    >>> purchase.reload()
+    >>> purchase.shipment_state
     u'received'
-    >> len(purchase.invoices)
+    >>> len(purchase.invoices)
     1
+
+Check both productions have been reserved::
+
+    >>> [x.state for x in Production.find([])]
+    >>> production1.reload()
+    >>> production1.state
+    u'assigned'
+    >>> production2.reload()
+    >>> production2.state
+    u'assigned'

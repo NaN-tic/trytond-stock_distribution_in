@@ -264,10 +264,15 @@ class Distribution(Workflow, ModelSQL, ModelView):
         cls.write([x for x in distributions if not x.effective_date], {
                 'effective_date': Date.today(),
                 })
-        Production.assign_try(Production.browse(list(productions)))
+        productions = Production.browse(list(productions))
+        Production.wait(productions)
+        for production in productions:
+            # We must assign production by production as assign_try()
+            # only updates production states if all moves of all productions
+            # are assigned
+            Production.assign_try([production])
 
         Purchase.process(Purchase.browse(purchase_ids))
-
 
 
 class DistributionLine(ModelSQL, ModelView):
