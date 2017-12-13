@@ -449,8 +449,8 @@ class Production:
             if not product in products:
                 continue
             products[product] -= line.quantity
-        return '\n'.join(['%.0f     %s' % (quantity, product.code) for product,
-                quantity in products.iteritems() if quantity > 0])
+        return '\n'.join(['%.0f     %s' % (q, p.code) for p, q in
+                products.iteritems() if q > 0])
 
     def get_distribution_pending_products(self, name):
         pool = Pool()
@@ -474,8 +474,8 @@ class Production:
             if not product in products:
                 continue
             products[product] -= line.quantity
-        return '\n'.join(['%.0f     %s' % (quantity, product.code) for product,
-                quantity in products.iteritems() if quantity > 0])
+        return '\n'.join(['%.0f     %s' % (q, p.code) for p, q in
+                products.iteritems() if q > 0])
 
 
 class Location:
