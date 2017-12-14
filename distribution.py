@@ -93,7 +93,32 @@ class Distribution(Workflow, ModelSQL, ModelView):
                     'distributed:\n%(moves)s'),
                 'cannot_delete_done': ('Distribution "%s" cannot be deleted '
                     'because it is in "Done" state.'),
+                'other_draft_distribution': ('There is already a draft '
+                    'distribution ("%(distribution)s") in warehouse '
+                    '"%(warehouse)s".'),
                 })
+
+    @classmethod
+    def validate(cls, distributions):
+        super(Distribution, cls).validate(distributions)
+        for distribution in distributions:
+            distribution.check_duplicates()
+
+    def check_duplicates(self):
+        # Ensure there's no other distribution in draft state in the same
+        # warehouse
+        if self.state != 'draft':
+            return
+        others = self.search([
+                ('state', '=', 'draft'),
+                ('warehouse', '=', self.warehouse.id),
+                ('id', '!=', self.id),
+                ])
+        if others:
+            self.raise_user_error('other_draft_distribution', {
+                    'distribution': others[0].rec_name,
+                    'warehouse': self.warehouse.rec_name,
+                    })
 
     @classmethod
     def create(cls, vlist):
