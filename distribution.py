@@ -195,7 +195,7 @@ class Distribution(Workflow, ModelSQL, ModelView):
         to_copy = []
         to_copy_lines = []
         purchase_ids = set()
-        productions = set()
+        inputs = {}
         for distribution in distributions:
             mismatches = []
             for move in distribution.moves:
@@ -208,7 +208,14 @@ class Distribution(Workflow, ModelSQL, ModelView):
                 locations = {}
                 for line in move.distribution_lines:
                     quantity += line.quantity
-                    location = line.location or move.to_location
+
+                    if line.production:
+                        inputs.setdefault(line.production.id,
+                            {}).setdefault(line.move.product.id, 0.0)
+                        inputs[line.production.id][line.move.product.id] += (
+                            line.quantity)
+
+                    location = line.location or distribution.warehouse_input
                     locations.setdefault(location, {
                             'quantity': 0.0,
                             'lines': [],
@@ -229,8 +236,6 @@ class Distribution(Workflow, ModelSQL, ModelView):
 
                 first = True
                 for location, data in locations.iteritems():
-                    if line.production:
-                        productions.add(line.production.id)
                     if first:
                         first = False
                         move.quantity = data['quantity']
@@ -264,13 +269,49 @@ class Distribution(Workflow, ModelSQL, ModelView):
         cls.write([x for x in distributions if not x.effective_date], {
                 'effective_date': Date.today(),
                 })
-        productions = Production.browse(list(productions))
+
+        productions = Production.browse(inputs.keys())
         Production.wait(productions)
+        to_assign = []
         for production in productions:
-            # We must assign production by production as assign_try()
-            # only updates production states if all moves of all productions
-            # are assigned
-            Production.assign_try([production])
+            for input_ in production.inputs:
+                if input_.state != 'draft':
+                    continue
+                quantity = inputs[production.id].get(input_.product.id, 0.0)
+                if quantity > 0.0:
+                    quantity = min(input_.quantity, quantity)
+                    if quantity < input_.quantity:
+                        moves = input_.split(quantity, input_.uom, count=1)
+                        for move in moves:
+                            if move.quantity == quantity:
+                                break
+                    else:
+                        move = input_
+                    move.from_location = (
+                        production.warehouse.input_location.id)
+                    move.save()
+                    to_assign.append(move)
+                    inputs[production.id][input_.product.id] -= quantity
+        if to_assign:
+            # By assigning move by move instead of using production's
+            # assign_try we intend to prevent cases in which a product is
+            # reserved by the wrong production
+            #
+            # For example if production A requires product 1 and 2 but only
+            # product 1 has been distributed to it. And the distribution has
+            # distributed product 2 to another production B, then by running
+            # assign_try on production A first, would probably mean that
+            # production A also assigns product 2, which is wrong.
+            Move.assign_try(to_assign)
+
+            # Once individual moves have been assigned, we can safely run
+            # assign_try
+            for production in productions:
+                # We must assign production by production as assign_try()
+                # only updates production states if all moves of all
+                # productions are assigned
+                # TODO: That should probably be fixed in core
+                Production.assign_try([production])
 
         Purchase.process(Purchase.browse(purchase_ids))
 
