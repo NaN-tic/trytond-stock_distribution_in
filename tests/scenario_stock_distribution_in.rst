@@ -248,7 +248,6 @@ Check invoice lines exist::
 
 Check both productions have been reserved::
 
-    >>> [x.state for x in Production.find([])]
     >>> production1.reload()
     >>> production1.state
     u'assigned'
