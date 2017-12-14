@@ -132,8 +132,7 @@ class Distribution(Workflow, ModelSQL, ModelView):
             if values.get('number') is None:
                 values['number'] = Sequence.get_id(
                     config.distribution_in_sequence)
-        shipments = super(Distribution, cls).create(vlist)
-        return shipments
+        return super(Distribution, cls).create(vlist)
 
     @classmethod
     def copy(cls, distributions, default=None):
