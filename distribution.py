@@ -140,9 +140,12 @@ class Distribution(Workflow, ModelSQL, ModelView):
             default = {}
         default = default.copy()
         default.setdefault('number')
-        default.setdefault('moves')
-        default.setdefault('lines')
-        return super(Move, cls).copy(distributions, default)
+        default.setdefault('moves', None)
+        default.setdefault('lines', None)
+        default.setdefault('productions', None)
+        default.setdefault('locations', None)
+        default.setdefault('state', 'draft')
+        return super(Distribution, cls).copy(distributions, default)
 
     @classmethod
     def delete(cls, distributions):
