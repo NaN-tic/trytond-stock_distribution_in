@@ -463,8 +463,8 @@ class Production:
         return super(Production, cls).copy(productions, default)
 
     def get_distribution_products(self, name):
-        return '\n'.join(['%.0f     %s' % (x.quantity, x.move.product.code) for
-                x in self.distribution_lines])
+        return '\n'.join(['%.0f     %s' % (x.quantity, x.move.product.rec_name)
+                for x in self.distribution_lines])
 
     def get_distribution_assigned_products(self, name):
         pool = Pool()
@@ -490,7 +490,7 @@ class Production:
             if not product in products:
                 continue
             products[product] -= line.quantity
-        return '\n'.join(['%.0f     %s' % (q, p.code) for p, q in
+        return '\n'.join(['%.0f     %s' % (q, p.rec_name) for p, q in
                 products.iteritems() if q > 0])
 
     def get_distribution_pending_products(self, name):
@@ -515,7 +515,7 @@ class Production:
             if not product in products:
                 continue
             products[product] -= line.quantity
-        return '\n'.join(['%.0f     %s' % (q, p.code) for p, q in
+        return '\n'.join(['%.0f     %s' % (q, p.rec_name) for p, q in
                 products.iteritems() if q > 0])
 
 
