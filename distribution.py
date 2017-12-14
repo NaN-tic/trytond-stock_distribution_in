@@ -153,6 +153,7 @@ class Distribution(Workflow, ModelSQL, ModelView):
             if distribution.state == 'done':
                 cls.raise_user_error('cannot_delete_done',
                     distribution.rec_name)
+        super(Distribution, cls).delete(distributions)
 
     @fields.depends('warehouse')
     def on_change_with_warehouse_input(self, name=None):
