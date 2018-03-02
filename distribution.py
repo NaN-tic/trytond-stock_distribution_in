@@ -374,7 +374,6 @@ class DistributionLine(ModelSQL, ModelView):
     distribution_state = fields.Function(fields.Selection(STATES,
                 'Distribution State'), 'on_change_with_distribution_state')
 
-
     @classmethod
     def __setup__(cls):
         super(DistributionLine, cls).__setup__()
