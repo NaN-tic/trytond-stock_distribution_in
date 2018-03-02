@@ -2,6 +2,22 @@
 msgid ""
 msgstr "Content-Type: text/plain; charset=utf-8\n"
 
+msgctxt "error:stock.distribution.in.line:"
+msgid ""
+"Distribution line \"%s\" must have a value in one of \"Production\" or "
+"\"Location\" fields."
+msgstr ""
+"La línea de reparto \"%s\" debe tener un valor en el campo \"Producción\" o "
+"\"Ubicación\"."
+
+msgctxt "error:stock.distribution.in.line:"
+msgid ""
+"Distribution line \"%s\" must have one of \"Production\" or \"Location\" "
+"fields empty."
+msgstr ""
+"La línea de reparto \"%s\" debe tener el campo \"Producción\" o "
+"\"Ubicación\" vacío."
+
 msgctxt "error:stock.distribution.in:"
 msgid "Distribution \"%s\" cannot be deleted because it is in \"Done\" state."
 msgstr "El reparto \"%s\" no se puede eliminar porqué está en estado \"Finalizado\"."
@@ -14,9 +30,25 @@ msgstr ""
 "Los siguientes movimientos en el reparto \"%(distribution)s\" tienen una cantidad repartida diferente:\n"
 "%(moves)s"
 
+msgctxt "error:stock.distribution.in:"
+msgid ""
+"There is already a draft distribution (\"%(distribution)s\") in warehouse "
+"\"%(warehouse)s\"."
+msgstr ""
+"Ya existe un reparto en borrador (\"%(distribution)s\") en el almacén "
+"\"%(warehouse)s\"."
+
+msgctxt "field:production,distribution_assigned_products:"
+msgid "Other Assigned Products"
+msgstr "Otros productos reservados"
+
 msgctxt "field:production,distribution_lines:"
 msgid "Distribution Lines"
 msgstr "Líneas de reparto"
+
+msgctxt "field:production,distribution_pending_products:"
+msgid "Other Pending Products"
+msgstr "Otros productos pendientes"
 
 msgctxt "field:production,distribution_products:"
 msgid "Distribution Products"
@@ -32,11 +64,11 @@ msgstr "Empresa"
 
 msgctxt "field:stock.distribution.in,create_date:"
 msgid "Create Date"
-msgstr "Fecha creación"
+msgstr "Fecha de creación"
 
 msgctxt "field:stock.distribution.in,create_uid:"
 msgid "Create User"
-msgstr "Usuario creación"
+msgstr "Usuario de creación"
 
 msgctxt "field:stock.distribution.in,effective_date:"
 msgid "Effective Date"
@@ -84,19 +116,19 @@ msgstr "Ubicación de entrada"
 
 msgctxt "field:stock.distribution.in,write_date:"
 msgid "Write Date"
-msgstr "Fecha modificación"
+msgstr "Fecha de modificación"
 
 msgctxt "field:stock.distribution.in,write_uid:"
 msgid "Write User"
-msgstr "Usuario modificación"
+msgstr "Usuario de modificación"
 
 msgctxt "field:stock.distribution.in.line,create_date:"
 msgid "Create Date"
-msgstr "Fecha creación"
+msgstr "Fecha de creación"
 
 msgctxt "field:stock.distribution.in.line,create_uid:"
 msgid "Create User"
-msgstr "Usuario creación"
+msgstr "Usuario de creación"
 
 msgctxt "field:stock.distribution.in.line,distribution:"
 msgid "Distribution"
@@ -140,11 +172,11 @@ msgstr "Dígitos UdM"
 
 msgctxt "field:stock.distribution.in.line,write_date:"
 msgid "Write Date"
-msgstr "Fecha modificación"
+msgstr "Fecha de modificación"
 
 msgctxt "field:stock.distribution.in.line,write_uid:"
 msgid "Write User"
-msgstr "Usuario modificación"
+msgstr "Usuario de modificación"
 
 msgctxt "field:stock.location,distribution_lines:"
 msgid "Distribution Lines"
@@ -171,7 +203,7 @@ msgid "Distribution Productions"
 msgstr "Producciones de reparto"
 
 msgctxt "model:ir.action,name:act_distribution_in"
-msgid "Supplier Distribution"
+msgid "Supplier Distributions"
 msgstr "Repartos de proveedor"
 
 msgctxt "model:ir.action,name:act_move_form"
@@ -209,7 +241,7 @@ msgid "Supplier Distribution"
 msgstr "Reparto de proveedor"
 
 msgctxt "model:ir.ui.menu,name:menu_distribution_in"
-msgid "Supplier Distribution"
+msgid "Supplier Distributions"
 msgstr "Reparto de proveedor"
 
 msgctxt "model:stock.distribution.in,name:"
