@@ -173,6 +173,7 @@ class Distribution(Workflow, ModelSQL, ModelView):
         for distribution in distributions:
             to_remove += [x for x in distribution.lines]
         Line.delete(to_remove)
+        cumulated_targets = {}
 
         lines = []
         for distribution in distributions:
@@ -184,9 +185,13 @@ class Distribution(Workflow, ModelSQL, ModelView):
                         ], order=[('planned_date', 'ASC')])
                 remaining = move.quantity
                 for target_move in target_moves:
-                    quantity = min(remaining, target_move.quantity)
+                    cumulated = cumulated_targets.get(target_move.id, 0.0)
+                    quantity = min(remaining, target_move.quantity - cumulated)
                     if not quantity:
                         break
+                    if not target_move.id in cumulated_targets:
+                        cumulated_targets[target_move.id] = 0.0
+                    cumulated_targets[target_move.id] += quantity
                     line = Line()
                     line.distribution = distribution
                     line.move = move
