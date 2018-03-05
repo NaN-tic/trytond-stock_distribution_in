@@ -45,7 +45,9 @@ class Distribution(Workflow, ModelSQL, ModelView):
     lines = fields.One2Many('stock.distribution.in.line', 'distribution',
         'Lines', states=_states)
     productions = fields.Many2Many('stock.distribution.in.line',
-        'distribution', 'production', 'Productions', readonly=True)
+        'distribution', 'production', 'Productions', readonly=True, context={
+            'distribution': Eval('active_id'),
+            })
     locations = fields.Many2Many('stock.distribution.in.line', 'distribution',
         'location', 'Locations', readonly=True)
     state = fields.Selection(STATES, 'State', readonly=True, required=True)
@@ -490,8 +492,10 @@ class Production:
         return super(Production, cls).copy(productions, default)
 
     def get_distribution_products(self, name):
+        current_distribution = Transaction().context.get('distribution')
         return '\n'.join(['%.0f     %s' % (x.quantity, x.move.product.rec_name)
-                for x in self.distribution_lines])
+                for x in self.distribution_lines
+                if x.distribution.id == current_distribution])
 
     def get_distribution_assigned_products(self, name):
         pool = Pool()
