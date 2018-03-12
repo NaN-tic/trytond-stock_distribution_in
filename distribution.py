@@ -199,7 +199,7 @@ class Distribution(Workflow, ModelSQL, ModelView):
         for distribution in distributions:
             for move in distribution.moves:
                 remaining = move.quantity
-                for target_move in target_moves[move.product.id]:
+                for target_move in target_moves.get(move.product.id, []):
                     if remaining <= 0:
                         break
                     quantity = min(remaining, target_move['quantity'])
