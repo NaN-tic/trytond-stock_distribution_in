@@ -1,3 +1,4 @@
+from sql.aggregate import Sum
 from trytond.model import fields, ModelSQL, ModelView, Workflow
 from trytond.pyson import Eval, If, Bool
 from trytond.pool import PoolMeta, Pool
@@ -173,30 +174,41 @@ class Distribution(Workflow, ModelSQL, ModelView):
         for distribution in distributions:
             to_remove += [x for x in distribution.lines]
         Line.delete(to_remove)
-        cumulated_targets = {}
+
+        table = Move.__table__()
+        # TODO: planned_date may potentially be different in two different
+        # target moves for the same production.
+        query = table.select(
+            table.product,
+            table.production_input,
+            Sum(table.internal_quantity),
+            group_by=(table.product, table.production_input,
+                table.planned_date),
+            where=(table.state == 'draft') & (table.production_input != None),
+            order_by=table.planned_date)
+        cursor = Transaction().connection.cursor()
+        cursor.execute(*query)
+        target_moves = {}
+        for record in cursor.fetchall():
+            target_moves.setdefault(record[0], []).append({
+                    'production': record[1],
+                    'quantity': record[2],
+                    })
 
         lines = []
         for distribution in distributions:
             for move in distribution.moves:
-                target_moves = Move.search([
-                        ('production_input', '!=', None),
-                        ('state', '=', 'draft'),
-                        ('product', '=', move.product.id),
-                        ], order=[('planned_date', 'ASC')])
                 remaining = move.quantity
-                for target_move in target_moves:
-                    cumulated = cumulated_targets.get(target_move.id, 0.0)
-                    quantity = min(remaining, target_move.quantity - cumulated)
-                    if not quantity:
+                for target_move in target_moves[move.product.id]:
+                    quantity = min(remaining, target_move['quantity'])
+                    if quantity <= 0:
                         break
-                    if not target_move.id in cumulated_targets:
-                        cumulated_targets[target_move.id] = 0.0
-                    cumulated_targets[target_move.id] += quantity
+                    target_move['quantity'] -= quantity
                     line = Line()
                     line.distribution = distribution
                     line.move = move
                     line.quantity = quantity
-                    line.production = target_move.production_input
+                    line.production = target_move['production']
                     lines.append(line)
                     remaining -= quantity
                 if remaining:
