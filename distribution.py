@@ -303,8 +303,10 @@ class Distribution(Workflow, ModelSQL, ModelView):
                                 for x in mismatches]),
                         })
 
-        new_moves = Move.copy(to_copy)
-        for move, line, new in zip(to_copy, to_copy_lines, new_moves):
+        new_moves = []
+        for move, line in zip(to_copy, to_copy_lines):
+            new, = Move.copy([move])
+            new_moves.append(new)
             new.distribution = move.distribution
             new.quantity = line.quantity
             new.to_location = line.location or move.to_location
