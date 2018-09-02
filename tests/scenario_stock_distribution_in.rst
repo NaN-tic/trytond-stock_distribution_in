@@ -7,7 +7,8 @@ Imports::
     >>> import datetime
     >>> from dateutil.relativedelta import relativedelta
     >>> from decimal import Decimal
-    >>> from proteus import config, Model, Wizard
+    >>> from proteus import config, Model
+    >>> from trytond.tests.tools import activate_modules
     >>> from trytond.modules.company.tests.tools import create_company, \
     ...     get_company
     >>> from trytond.modules.account.tests.tools import create_fiscalyear, \
@@ -16,17 +17,9 @@ Imports::
     ...     set_fiscalyear_invoice_sequences, create_payment_term
     >>> today = datetime.date.today()
 
-Create database::
+Activate stock_distribution_in::
 
-    >>> config = config.set_trytond()
-    >>> config.pool.test = True
-
-Install stock Module::
-
-    >>> Module = Model.get('ir.module')
-    >>> module, = Module.find([('name', '=', 'stock_distribution_in')])
-    >>> module.click('install')
-    >>> Wizard('ir.module.install_upgrade').execute('upgrade')
+    >>> config = activate_modules('stock_distribution_in')
 
 Create company::
 
@@ -86,7 +79,6 @@ Create product::
     >>> template.default_uom = unit
     >>> template.type = 'goods'
     >>> template.list_price = Decimal('20')
-    >>> template.cost_price = Decimal('8')
     >>> template.purchasable = True
     >>> template.account_expense = expense
     >>> template.account_revenue = revenue

@@ -8,6 +8,7 @@ from . import distribution
 def register():
     Pool.register(
         configuration.Configuration,
+        configuration.ConfigurationSequence,
         distribution.Distribution,
         distribution.DistributionLine,
         distribution.Move,

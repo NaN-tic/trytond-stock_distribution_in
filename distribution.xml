@@ -50,6 +50,18 @@ this repository contains the full copyright notices and license terms. -->
             <field name="act_window" ref="act_distribution_in"/>
         </record>
 
+        <record model="ir.model.button" id="distribution_in_distribute_button">
+            <field name="name">distribute</field>
+            <field name="string">Distribute</field>
+            <field name="model" search="[('model', '=', 'stock.distribution.in')]"/>
+        </record>
+        <record model="ir.model.button" id="distribution_in_do_button">
+            <field name="name">do</field>
+            <field name="string">Do</field>
+            <field name="confirm">This process is irreversible. Are you sure you want to confirm this distribution?</field>
+            <field name="model" search="[('model', '=', 'stock.distribution.in')]"/>
+        </record>
+
         <menuitem parent="stock.menu_stock" sequence="10"
             action="act_distribution_in"
             id="menu_distribution_in"/>

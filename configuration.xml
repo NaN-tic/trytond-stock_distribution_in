@@ -8,11 +8,5 @@ this repository contains the full copyright notices and license terms. -->
             <field name="inherit" ref="stock.stock_configuration_view_form"/>
             <field name="name">configuration_form</field>
         </record>
-
-        <record model="ir.property" id="property_distribution_in_sequence">
-            <field name="field"
-                search="[('model.model', '=', 'stock.configuration'), ('name', '=', 'distribution_in_sequence')]"/>
-            <field name="value" eval="'ir.sequence,' + str(ref('sequence_distribution_in'))"/>
-        </record>
     </data>
 </tryton>
