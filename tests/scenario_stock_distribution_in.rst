@@ -119,7 +119,7 @@ Create one production in wait state::
     >>> input_move.currency = company.currency
     >>> production1.click('wait')
     >>> production1.state
-    u'waiting'
+    'waiting'
 
 Create another production in draft state::
 
@@ -137,7 +137,7 @@ Create another production in draft state::
     >>> input_move.currency = company.currency
     >>> production2.save()
     >>> production2.state
-    u'draft'
+    'draft'
 
 Create purchase::
 
@@ -155,7 +155,7 @@ Create purchase::
     >>> purchase.click('confirm')
     >>> purchase.click('process')
     >>> purchase.state
-    u'processing'
+    'processing'
     >>> len(purchase.moves), len(purchase.shipment_returns), len(purchase.invoices)
     (1, 0, 0)
 
@@ -195,7 +195,7 @@ Ensure that a distribution not properly spread cannot be done::
     UserError: ...
     >>> distribution.reload()
     >>> distribution.state
-    u'draft'
+    'draft'
 
 Ensure that unlinking a move from the distribution automatically removes its
 distribution lines::
@@ -216,11 +216,11 @@ Check that when the distribution is done, everything is correct::
     >>> distribution.click('distribute')
     >>> distribution.click('do')
     >>> distribution.state
-    u'done'
+    'done'
     >>> distribution.reload()
     >>> incoming_move.reload()
     >>> incoming_move.state
-    u'done'
+    'done'
     >>> incoming_move.quantity
     8.0
     >>> line1, line2 = incoming_move.distribution_lines
@@ -230,11 +230,11 @@ Check that when the distribution is done, everything is correct::
     >>> move1.quantity + move2.quantity
     10.0
     >>> move1.state
-    u'done'
+    'done'
     >>> move1.quantity == sum([x.quantity for x in move1.distribution_lines])
     True
     >>> move2.state
-    u'done'
+    'done'
     >>> move2.quantity == sum([x.quantity for x in move2.distribution_lines])
     True
 
@@ -242,7 +242,7 @@ Check invoice lines exist::
 
     >>> purchase.reload()
     >>> purchase.shipment_state
-    u'received'
+    'received'
     >>> len(purchase.invoices)
     1
 
@@ -250,7 +250,7 @@ Check both productions have been reserved::
 
     >>> production1.reload()
     >>> production1.state
-    u'assigned'
+    'assigned'
     >>> production2.reload()
     >>> production2.state
-    u'assigned'
+    'assigned'

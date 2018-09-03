@@ -284,7 +284,7 @@ class Distribution(Workflow, ModelSQL, ModelView):
                         break
 
                 first = True
-                for location, data in locations.iteritems():
+                for location, data in locations.items():
                     if first:
                         first = False
                         move.quantity = data['quantity']
@@ -444,9 +444,8 @@ class DistributionLine(ModelSQL, ModelView):
         return 'draft'
 
 
-class Move:
+class Move(metaclass=PoolMeta):
     __name__ = 'stock.move'
-    __metaclass__ = PoolMeta
 
     distribution = fields.Many2One('stock.distribution.in', 'Distribution')
     distribution_lines = fields.One2Many('stock.distribution.in.line', 'move',
@@ -491,9 +490,8 @@ class Move:
                 for x in self.distribution_lines if x.location])
 
 
-class Production:
+class Production(metaclass=PoolMeta):
     __name__ = 'production'
-    __metaclass__ = PoolMeta
 
     distribution_lines = fields.One2Many('stock.distribution.in.line',
         'production', 'Distribution Lines')
@@ -543,7 +541,7 @@ class Production:
                 continue
             products[product] -= line.quantity
         return '\n'.join(['%.0f     %s' % (q, p.rec_name) for p, q in
-                products.iteritems() if q > 0])
+                products.items() if q > 0])
 
     def get_distribution_pending_products(self, name):
         pool = Pool()
@@ -568,12 +566,11 @@ class Production:
                 continue
             products[product] -= line.quantity
         return '\n'.join(['%.0f     %s' % (q, p.rec_name) for p, q in
-                products.iteritems() if q > 0])
+                products.items() if q > 0])
 
 
-class Location:
+class Location(metaclass=PoolMeta):
     __name__ = 'stock.location'
-    __metaclass__ = PoolMeta
 
     distribution_lines = fields.One2Many('stock.distribution.in.line',
         'location', 'Distribution Lines')

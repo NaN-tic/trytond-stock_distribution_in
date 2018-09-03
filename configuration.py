@@ -6,9 +6,8 @@ from trytond.modules.stock.configuration import default_func, default_sequence
 __all__ = ['Configuration', 'ConfigurationSequence']
 
 
-class Configuration:
+class Configuration(metaclass=PoolMeta):
     __name__ = 'stock.configuration'
-    __metaclass__ = PoolMeta
     distribution_in_sequence = fields.MultiValue(fields.Many2One('ir.sequence',
         'Supplier Distribution Sequence', domain=[
             ('company', 'in',
@@ -25,9 +24,8 @@ class Configuration:
         return super(Configuration, cls).multivalue_model(field)
 
 
-class ConfigurationSequence:
+class ConfigurationSequence(metaclass=PoolMeta):
     __name__ = 'stock.configuration.sequence'
-    __metaclass__ = PoolMeta
 
     distribution_in_sequence = fields.Many2One('ir.sequence',
         "Supplier Distribution Sequence", required=True,
