@@ -19,6 +19,14 @@ msgstr ""
 "\"Ubicació\" buits."
 
 msgctxt "error:stock.distribution.in:"
+msgid ""
+"Distribution \"%(distribution)s\" cannot be done because there is not enough"
+" stock. Please review the following quantites: %(quantities)s"
+msgstr ""
+"El repartiment \"%(distribution)s\" no es pot realitzar perquè no hi ha prou"
+" estoc. Si us plau, revisi les següents quantitats: %(quantities)s"
+
+msgctxt "error:stock.distribution.in:"
 msgid "Distribution \"%s\" cannot be deleted because it is in \"Done\" state."
 msgstr "El repartiment \"%s\" no es pot eliminar perquè està en estat \"Finalitzat\"."
 

@@ -99,6 +99,9 @@ class Distribution(Workflow, ModelSQL, ModelView):
                 'other_draft_distribution': ('There is already a draft '
                     'distribution ("%(distribution)s") in warehouse '
                     '"%(warehouse)s".'),
+                'not_assigned_quantities': ('Distribution "%(distribution)s" cannot be done '
+                    'because there is not enough stock. Please review the '
+                    'following quantites: %(quantities)s'),
                 })
 
     @classmethod
@@ -324,6 +327,7 @@ class Distribution(Workflow, ModelSQL, ModelView):
         productions = Production.browse(inputs.keys())
         Production.wait(productions)
         to_assign = []
+        move_quantities = {}
         for production in productions:
             for input_ in production.inputs:
                 if input_.state != 'draft':
@@ -342,6 +346,7 @@ class Distribution(Workflow, ModelSQL, ModelView):
                         production.warehouse.input_location.id)
                     move.save()
                     to_assign.append(move)
+                    move_quantities[move.id] = move.quantity
                     inputs[production.id][input_.product.id] -= quantity
         if to_assign:
             # By assigning move by move instead of using production's
@@ -354,7 +359,25 @@ class Distribution(Workflow, ModelSQL, ModelView):
             # assign_try on production A first, would probably mean that
             # production A also assigns product 2, which is wrong.
             Move.assign_try(to_assign)
+            to_do = []
+            not_assigned_quantities = ''
+            for move in to_assign:
+                if move.quantity == move_quantities[move.id]:
+                    to_do.append(move)
+                else:
+                    not_assigned_quantities = ('\n' +
+                        move.from_location.rec_name + ': ' +
+                        move.product.rec_name + ': ' + str(
+                            move_quantities[move.id]))
+            if not_assigned_quantities:
+                cls.raise_user_error('not_assigned_quantities', {
+                        'distribution': distribution.rec_name,
+                        'quantities': not_assigned_quantities,
+                        })
+            else:
+                Move.do(to_do)
 
+            to_do = []
             # Once individual moves have been assigned, we can safely run
             # assign_try
             for production in productions:
@@ -363,6 +386,10 @@ class Distribution(Workflow, ModelSQL, ModelView):
                 # productions are assigned
                 # TODO: That should probably be fixed in core
                 Production.assign_try([production])
+                for input_ in production.inputs:
+                    if input_.state == 'assigned':
+                        to_do.append(input_)
+            Move.do(to_do)
 
         Purchase.process(Purchase.browse(purchase_ids))
 
