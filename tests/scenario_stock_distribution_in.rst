@@ -68,6 +68,7 @@ Get stock locations::
     >>> output_loc, = Location.find([('code', '=', 'OUT')])
     >>> storage_loc, = Location.find([('code', '=', 'STO')])
     >>> production_loc, = Location.find([('code', '=', 'PROD')])
+    >>> input_loc, = Location.find([('code', '=', 'IN')])
 
 Create account category::
 
@@ -209,11 +210,30 @@ distribution lines::
     >>> incoming_move.distribution_lines
     []
     >>> incoming_move = StockMove(incoming_move.id)
+    >>> distribution.moves.append(incoming_move)
+    >>> distribution.click('distribute')
+
+Ensure that a distribution cannot be done if there is enough stock::
+
+    >>> move = StockMove()
+    >>> move.product = product
+    >>> move.from_location = input_loc
+    >>> move.to_location = storage_loc
+    >>> move.quantity = 5
+    >>> move.click('do')
+    >>> distribution.click('do')  # doctest: +IGNORE_EXCEPTION_DETAIL
+    Traceback (most recent call last):
+        ...
+    UserError: ...
+    >>> move = StockMove()
+    >>> move.product = product
+    >>> move.from_location = storage_loc
+    >>> move.to_location = input_loc
+    >>> move.quantity = 5
+    >>> move.click('do')
 
 Check that when the distribution is done, everything is correct::
 
-    >>> distribution.moves.append(incoming_move)
-    >>> distribution.click('distribute')
     >>> distribution.click('do')
     >>> distribution.state
     'done'
@@ -251,6 +271,10 @@ Check both productions have been reserved::
     >>> production1.reload()
     >>> production1.state
     'assigned'
+    >>> production1.inputs[0].state
+    u'done'
     >>> production2.reload()
     >>> production2.state
     'assigned'
+    >>> production2.inputs[0].state
+    u'done'

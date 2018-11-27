@@ -19,6 +19,15 @@ msgstr ""
 "\"Ubicación\" vacío."
 
 msgctxt "error:stock.distribution.in:"
+msgid ""
+"Distribution \"%(distribution)s\" cannot be done because there is not enough"
+" stock. Please review the following quantites: %(quantities)s"
+msgstr ""
+"El reparto \"%(distribution)s\" no se puede realizar porque no hay "
+"suficiente stock. Por favor, revise las siguientes cantidades: "
+"%(quantities)s"
+
+msgctxt "error:stock.distribution.in:"
 msgid "Distribution \"%s\" cannot be deleted because it is in \"Done\" state."
 msgstr "El reparto \"%s\" no se puede eliminar porqué está en estado \"Finalizado\"."
 
