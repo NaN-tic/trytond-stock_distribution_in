@@ -377,7 +377,6 @@ class Distribution(Workflow, ModelSQL, ModelView):
             else:
                 Move.do(to_do)
 
-            to_do = []
             # Once individual moves have been assigned, we can safely run
             # assign_try
             for production in productions:
@@ -386,10 +385,6 @@ class Distribution(Workflow, ModelSQL, ModelView):
                 # productions are assigned
                 # TODO: That should probably be fixed in core
                 Production.assign_try([production])
-                for input_ in production.inputs:
-                    if input_.state == 'assigned':
-                        to_do.append(input_)
-            Move.do(to_do)
 
         Purchase.process(Purchase.browse(purchase_ids))
 
