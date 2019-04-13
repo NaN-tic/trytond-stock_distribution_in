@@ -3,6 +3,8 @@ from trytond.model import fields, ModelSQL, ModelView, Workflow
 from trytond.pyson import Eval, If, Bool
 from trytond.pool import PoolMeta, Pool
 from trytond.transaction import Transaction
+from trytond.i18n import gettext
+from trytond.exceptions import UserError
 
 __all__ = ['Distribution', 'DistributionLine', 'Move', 'Production', 'Location']
 
@@ -90,16 +92,6 @@ class Distribution(Workflow, ModelSQL, ModelView):
         cls._transitions |= set((
                 ('draft', 'done'),
                 ))
-        cls._error_messages.update({
-                'move_quantity_mismatch': ('The following moves in '
-                    'distribution "%(distribution)s" have a different quantity '
-                    'distributed:\n%(moves)s'),
-                'cannot_delete_done': ('Distribution "%s" cannot be deleted '
-                    'because it is in "Done" state.'),
-                'other_draft_distribution': ('There is already a draft '
-                    'distribution ("%(distribution)s") in warehouse '
-                    '"%(warehouse)s".'),
-                })
 
     @classmethod
     def validate(cls, distributions):
@@ -118,10 +110,11 @@ class Distribution(Workflow, ModelSQL, ModelView):
                 ('id', '!=', self.id),
                 ])
         if others:
-            self.raise_user_error('other_draft_distribution', {
-                    'distribution': others[0].rec_name,
-                    'warehouse': self.warehouse.rec_name,
-                    })
+            raise UserError(gettext(
+                'stock_distribution_in.other_draft_distribution',
+                    distribution=others[0].rec_name,
+                    warehouse=self.warehouse.rec_name,
+                    ))
 
     @classmethod
     def create(cls, vlist):
@@ -154,8 +147,9 @@ class Distribution(Workflow, ModelSQL, ModelView):
     def delete(cls, distributions):
         for distribution in distributions:
             if distribution.state == 'done':
-                cls.raise_user_error('cannot_delete_done',
-                    distribution.rec_name)
+                raise UserError(gettext(
+                    'stock_distribution_in.cannot_delete_done',
+                    distribution=distribution.rec_name))
         super(Distribution, cls).delete(distributions)
 
     @fields.depends('warehouse')
@@ -295,13 +289,14 @@ class Distribution(Workflow, ModelSQL, ModelView):
 
 
             if mismatches:
-                cls.raise_user_error('move_quantity_mismatch', {
-                        'distribution': distribution.rec_name,
-                        'moves': '\n'.join([ '%s: %.0f != %.0f' % (x['move'],
+                raise UserError(gettext(
+                    'stock_distribution_in.move_quantity_mismatch',
+                        distribution=distribution.rec_name,
+                        moves='\n'.join([ '%s: %.0f != %.0f' % (x['move'],
                                     x['move_quantity'],
                                     x['accumulated_quantity'])
                                 for x in mismatches]),
-                        })
+                        ))
 
         new_moves = []
         for move, line in zip(to_copy, to_copy_lines):
@@ -398,28 +393,19 @@ class DistributionLine(ModelSQL, ModelView):
                 'Distribution State'), 'on_change_with_distribution_state')
 
     @classmethod
-    def __setup__(cls):
-        super(DistributionLine, cls).__setup__()
-        cls._error_messages.update({
-                'only_production_or_location': ('Distribution line "%s" '
-                    'must have one of "Production" or "Location" fields '
-                    'empty.'),
-                'empty_production_and_location': ('Distribution line "%s" '
-                    'must have a value in one of "Production" or "Location" '
-                    'fields.'),
-                })
-
-    @classmethod
     def validate(cls, lines):
         for line in lines:
             line.check_production_location()
 
     def check_production_location(self):
         if self.production and self.location:
-            self.raise_user_error('only_production_or_location', self.rec_name)
+            raise UserError(gettext(
+                'stock_distribution_in.only_production_or_location',
+                    line=self.rec_name))
         if not self.production and not self.location:
-            self.raise_user_error('empty_production_and_location',
-                self.rec_name)
+            raise UserError(gettext(
+                'stock_distribution_in.empty_production_and_location',
+                    line=self.rec_name))
 
     def get_distribution(self, name):
         return self.move.distribution.id if self.move.distribution else None
