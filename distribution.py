@@ -92,9 +92,6 @@ class Distribution(Workflow, ModelSQL, ModelView):
         cls._transitions |= set((
                 ('draft', 'done'),
                 ))
-                'not_assigned_quantities': ('Distribution "%(distribution)s" cannot be done '
-                    'because there is not enough stock. Please review the '
-                    'following quantites: %(quantities)s'),
 
     @classmethod
     def validate(cls, distributions):
