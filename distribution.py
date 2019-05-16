@@ -362,10 +362,10 @@ class Distribution(Workflow, ModelSQL, ModelView):
                         move.product.rec_name + ': ' + str(
                             move_quantities[move.id]))
             if not_assigned_quantities:
-                cls.raise_user_error('not_assigned_quantities', {
-                        'distribution': distribution.rec_name,
-                        'quantities': not_assigned_quantities,
-                        })
+                raise UserError(
+                    gettext('stock_distribution_in.not_assigned_quantities',
+                    distribution=distribution.rec_name,
+                    quantities=not_assigned_quantities))
             else:
                 Move.do(to_do)
 
