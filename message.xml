@@ -25,5 +25,8 @@ this repository contains the full copyright notices and license terms. -->
             must have a value in one of "Production" or "Location"
             fields.</field>
     </record>
+    <record model="ir.message" id="not_assigned_quantities">
+        <field name="text">Distribution "%(distribution)s" cannot be done because there is not enough stock. Please review the following quantites: %(quantities)s</field>
+    </record>
     </data>
 </tryton>
