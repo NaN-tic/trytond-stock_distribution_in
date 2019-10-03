@@ -4,26 +4,19 @@ this repository contains the full copyright notices and license terms. -->
 <tryton>
     <data grouped="1">
     <record model="ir.message" id="move_quantity_mismatch">
-        <field name="text">The following moves in distribution "%(distribution)s" have a different quantity
-              distributed:\n%(moves)s.</field>
+        <field name="text">The following moves in distribution "%(distribution)s" have a different quantity distributed:\n%(moves)s.</field>
     </record>
     <record model="ir.message" id="cannot_delete_done">
         <field name="text">Distribution "%(distribution)s" cannot be deleted because it is in "Done" state.</field>
     </record>
     <record model="ir.message" id="other_draft_distribution">
-        <field name="text">There is already a draft
-                    distribution ("%(distribution)s") in warehouse
-                    "%(warehouse)s".</field>
+        <field name="text">There is already a draft distribution ("%(distribution)s") in warehouse "%(warehouse)s".</field>
     </record>
     <record model="ir.message" id="only_production_or_location">
-        <field name="text">Distribution line "%(line)s"
-                    must have one of "Production" or "Location" fields
-                    empty.</field>
+        <field name="text">Distribution line "%(line)s" must have one of "Production" or "Location" fields empty.</field>
     </record>
     <record model="ir.message" id="empty_production_and_location">
-        <field name="text">Distribution line "%(line)s"
-            must have a value in one of "Production" or "Location"
-            fields.</field>
+        <field name="text">Distribution line "%(line)s" must have a value in one of "Production" or "Location" fields.</field>
     </record>
     <record model="ir.message" id="not_assigned_quantities">
         <field name="text">Distribution "%(distribution)s" cannot be done because there is not enough stock. Please review the following quantites: %(quantities)s</field>
