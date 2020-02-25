@@ -49,7 +49,7 @@ class Distribution(Workflow, ModelSQL, ModelView):
         'Lines', states=_states)
     productions = fields.Many2Many('stock.distribution.in.line',
         'distribution', 'production', 'Productions', readonly=True, context={
-            'distribution': Eval('active_id'),
+            'distribution': Eval('id'),
             })
     locations = fields.Many2Many('stock.distribution.in.line', 'distribution',
         'location', 'Locations', readonly=True)
