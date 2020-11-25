@@ -298,20 +298,19 @@ class Distribution(Workflow, ModelSQL, ModelView):
                                 for x in mismatches]),
                         ))
 
-        new_moves = []
         for move, line in zip(to_copy, to_copy_lines):
             new, = Move.copy([move])
-            new_moves.append(new)
+            to_save.append(new)
             new.distribution = move.distribution
             new.quantity = line.quantity
             new.to_location = line.location or move.to_location
             new.origin = move.origin
             line.move = new
 
-        Move.save(new_moves)
+        Move.save(to_save)
         Line.save(to_copy_lines)
 
-        Move.do(to_save + new_moves)
+        Move.do(to_save)
         cls.write([x for x in distributions if not x.effective_date], {
                 'effective_date': Date.today(),
                 })
