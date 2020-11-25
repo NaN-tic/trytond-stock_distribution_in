@@ -354,7 +354,8 @@ class Distribution(Workflow, ModelSQL, ModelView):
             to_do = []
             not_assigned_quantities = ''
             for move in to_assign:
-                if move.quantity == move_quantities[move.id]:
+                if (move.state == 'assigned'
+                        and move.quantity == move_quantities[move.id]):
                     to_do.append(move)
                 else:
                     not_assigned_quantities = ('\n' +
