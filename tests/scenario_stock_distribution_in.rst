@@ -266,9 +266,9 @@ Check both productions have been reserved::
     >>> production1.state
     'assigned'
     >>> production1.inputs[0].state
-    u'done'
+    'done'
     >>> production2.reload()
     >>> production2.state
     'assigned'
     >>> production2.inputs[0].state
-    u'done'
+    'done'
