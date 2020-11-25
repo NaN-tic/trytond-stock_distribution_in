@@ -436,13 +436,13 @@ class DistributionLine(ModelSQL, ModelView):
     def get_uom(self, name):
         return self.move.uom.id
 
-    @fields.depends('move')
+    @fields.depends('move', '_parent_move.distribution')
     def on_change_with_uom_digits(self, name=None):
         if self.move and self.move.uom:
             return self.move.uom.digits
         return 2
 
-    @fields.depends('move')
+    @fields.depends('move', '_parent_move.distribution')
     def on_change_with_distribution_state(self, name=None):
         if self.move and self.move.distribution:
             return self.move.distribution.state
