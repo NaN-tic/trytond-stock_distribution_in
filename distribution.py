@@ -119,15 +119,13 @@ class Distribution(Workflow, ModelSQL, ModelView):
     @classmethod
     def create(cls, vlist):
         pool = Pool()
-        Sequence = pool.get('ir.sequence')
         Config = pool.get('stock.configuration')
 
         vlist = [x.copy() for x in vlist]
         config = Config(1)
         for values in vlist:
             if values.get('number') is None:
-                values['number'] = Sequence.get_id(
-                    config.distribution_in_sequence)
+                values['number'] = config.distribution_in_sequence.get()
         return super(Distribution, cls).create(vlist)
 
     @classmethod

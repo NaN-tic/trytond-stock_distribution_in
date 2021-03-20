@@ -1,5 +1,5 @@
 from trytond.model import fields
-from trytond.pyson import Eval
+from trytond.pyson import Eval, Id
 from trytond.pool import PoolMeta, Pool
 from trytond.modules.stock.configuration import default_func, default_sequence
 
@@ -12,7 +12,8 @@ class Configuration(metaclass=PoolMeta):
         'Supplier Distribution Sequence', domain=[
             ('company', 'in',
                 [Eval('context', {}).get('company', -1), None]),
-            ('code', '=', 'stock.distribution.in'),
+            ('sequence_type', '=', Id('stock_distribution_in',
+                        'sequence_type_distribution_in')),
             ], required=True))
 
     default_distribution_in_sequence = default_func('distribution_in_sequence')
@@ -31,7 +32,21 @@ class ConfigurationSequence(metaclass=PoolMeta):
         "Supplier Distribution Sequence", required=True,
         domain=[
             ('company', 'in', [Eval('company', -1), None]),
-            ('code', '=', 'stock.distribution.in'),
+            ('sequence_type', '=', Id('stock_distribution_in',
+                        'sequence_type_distribution_in')),
             ],
         depends=['company'])
     default_shipment_in_sequence = default_sequence('sequence_distribution_in')
+
+    @classmethod
+    def default_distribution_in_sequence(cls):
+        pool = Pool()
+        Sequence = pool.get('ir.sequence')
+        ModelData = pool.get('ir.model.data')
+
+        sequence_type_id = ModelData.get_id('stock_distribution_in',
+            'sequence_type_distribution_in')
+        sequences = Sequence.search([('sequence_type', '=', sequence_type_id)])
+        if sequences:
+            return sequences[0]
+

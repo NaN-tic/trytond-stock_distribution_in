@@ -118,7 +118,6 @@ this repository contains the full copyright notices and license terms. -->
 
         <record model="ir.sequence.type" id="sequence_type_distribution_in">
             <field name="name">Supplier Distribution</field>
-            <field name="code">stock.distribution.in</field>
         </record>
         <record model="ir.sequence.type-res.group"
             id="sequence_type_distribution_in_group_admin">
@@ -133,7 +132,7 @@ this repository contains the full copyright notices and license terms. -->
 
         <record model="ir.sequence" id="sequence_distribution_in">
             <field name="name">Supplier Distribution</field>
-            <field name="code">stock.distribution.in</field>
+            <field name="sequence_type" ref="sequence_type_distribution_in"/>
         </record>
 
         <!-- From distribution to moves -->
