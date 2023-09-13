@@ -146,6 +146,7 @@ Create purchase::
     >>> purchase.lines.append(purchase_line)
     >>> purchase_line.product = product
     >>> purchase_line.quantity = 10
+    >>> purchase_line.unit_price = Decimal('10')
     >>> purchase.click('quote')
     >>> purchase.click('confirm')
     >>> purchase.click('process')
