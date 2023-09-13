@@ -103,7 +103,7 @@ Create one production in wait state::
     >>> production1 = Production()
     >>> input_move = production1.inputs.new()
     >>> input_move.product = product
-    >>> input_move.uom = unit
+    >>> input_move.unit = unit
     >>> input_move.quantity = 5
     >>> input_move.from_location = storage_loc
     >>> input_move.to_location = production_loc
@@ -121,7 +121,7 @@ Create another production in draft state::
     >>> production2 = Production()
     >>> input_move = production2.inputs.new()
     >>> input_move.product = product
-    >>> input_move.uom = unit
+    >>> input_move.unit = unit
     >>> input_move.quantity = 3
     >>> input_move.from_location = storage_loc
     >>> input_move.to_location = production_loc
