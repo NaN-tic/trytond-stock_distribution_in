@@ -44,7 +44,7 @@ class Distribution(Workflow, ModelSQL, ModelView):
             ('distribution', '=', None),
             ], domain=[
             ('from_location.type', '=', 'supplier'),
-            ], states=_states, depends=['state'])
+            ], states=_states)
     lines = fields.One2Many('stock.distribution.in.line', 'distribution',
         'Lines', states=_states)
     productions = fields.Many2Many('stock.distribution.in.line',
@@ -399,13 +399,13 @@ class DistributionLine(ModelSQL, ModelView):
     production = fields.Many2One('production', 'Production', states={
             'readonly': ((Eval('distribution_state') != 'draft')
                 | (Bool(Eval('location')) == True))
-            }, depends=['distribution_state', 'location'])
+            })
     location = fields.Many2One('stock.location', 'Location', domain=[
             ('type', 'in', ['storage', 'view']),
             ], states={
             'readonly': ((Eval('distribution_state') != 'draft')
                 | (Bool(Eval('production')) == True))
-            }, depends=['distribution_state', 'production'])
+            })
     distribution_state = fields.Function(fields.Selection(STATES,
                 'Distribution State'), 'on_change_with_distribution_state')
 
