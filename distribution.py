@@ -35,8 +35,7 @@ class Distribution(Workflow, ModelSQL, ModelView):
         domain=[
             ('id', If(Eval('context', {}).contains('company'), '=', '!='),
                 Eval('context', {}).get('company', -1)),
-            ],
-        depends=['state'])
+            ])
     moves = fields.One2Many('stock.move', 'distribution', 'Moves', add_remove=[
             ('shipment', '=', None),
             ('from_location.type', '=', 'supplier'),
@@ -389,10 +388,9 @@ class DistributionLine(ModelSQL, ModelView):
 
     distribution = fields.Function(fields.Many2One('stock.distribution.in',
             'Distribution'), 'get_distribution', searcher='search_distribution')
-    move = fields.Many2One('stock.move', 'Move', required=True, states=_states,
-        depends=_depends)
+    move = fields.Many2One('stock.move', 'Move', required=True, states=_states)
     quantity = fields.Float('Quantity', required=True, states=_states,
-        digits=(16, Eval('uom_digits', 2)), depends=_depends + ['uom_digits'])
+        digits=(16, Eval('uom_digits', 2)), depends=['uom_digits'])
     uom = fields.Function(fields.Many2One('product.uom', 'UoM'), 'get_uom')
     uom_digits = fields.Function(fields.Integer('UoM Digits'),
         'on_change_with_uom_digits')

@@ -34,8 +34,7 @@ class ConfigurationSequence(metaclass=PoolMeta):
             ('company', 'in', [Eval('company', -1), None]),
             ('sequence_type', '=', Id('stock_distribution_in',
                         'sequence_type_distribution_in')),
-            ],
-        depends=['company'])
+            ])
     default_shipment_in_sequence = default_sequence('sequence_distribution_in')
 
     @classmethod
