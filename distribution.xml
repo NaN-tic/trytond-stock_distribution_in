@@ -53,13 +53,13 @@ this repository contains the full copyright notices and license terms. -->
         <record model="ir.model.button" id="distribution_in_distribute_button">
             <field name="name">distribute</field>
             <field name="string">Distribute</field>
-            <field name="model" search="[('model', '=', 'stock.distribution.in')]"/>
+            <field name="model">stock.distribution.in</field>
         </record>
         <record model="ir.model.button" id="distribution_in_do_button">
             <field name="name">do</field>
             <field name="string">Do</field>
             <field name="confirm">This process is irreversible. Are you sure you want to confirm this distribution?</field>
-            <field name="model" search="[('model', '=', 'stock.distribution.in')]"/>
+            <field name="model">stock.distribution.in</field>
         </record>
 
         <menuitem parent="stock.menu_stock" sequence="10"
@@ -193,7 +193,7 @@ this repository contains the full copyright notices and license terms. -->
 
         <record model="ir.rule.group" id="rule_group_stock_distribution_in">
             <field name="name">User in company</field>
-            <field name="model" search="[('model', '=', 'stock.distribution.in')]"/>
+            <field name="model">stock.distribution.in</field>
             <field name="global_p" eval="True"/>
         </record>
         <record model="ir.rule" id="rule_stock_distribution_in1">
