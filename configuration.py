@@ -47,5 +47,5 @@ class ConfigurationSequence(metaclass=PoolMeta):
             'sequence_type_distribution_in')
         sequences = Sequence.search([('sequence_type', '=', sequence_type_id)])
         if sequences:
-            return sequences[0]
+            return sequences[0].id
 
