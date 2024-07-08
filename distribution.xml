@@ -119,13 +119,11 @@ this repository contains the full copyright notices and license terms. -->
         <record model="ir.sequence.type" id="sequence_type_distribution_in">
             <field name="name">Supplier Distribution</field>
         </record>
-        <record model="ir.sequence.type-res.group"
-            id="sequence_type_distribution_in_group_admin">
+        <record model="ir.sequence.type-res.group" id="sequence_type_distribution_in_group_admin">
             <field name="sequence_type" ref="sequence_type_distribution_in"/>
             <field name="group" ref="res.group_admin"/>
         </record>
-        <record model="ir.sequence.type-res.group"
-            id="sequence_type_distribution_in_group_stock_admin">
+        <record model="ir.sequence.type-res.group" id="sequence_type_distribution_in_group_stock_admin">
             <field name="sequence_type" ref="sequence_type_distribution_in"/>
             <field name="group" ref="stock.group_stock_admin"/>
         </record>

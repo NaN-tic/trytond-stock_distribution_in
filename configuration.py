@@ -16,13 +16,14 @@ class Configuration(metaclass=PoolMeta):
                         'sequence_type_distribution_in')),
             ], required=True))
 
-    default_distribution_in_sequence = default_func('distribution_in_sequence')
-
     @classmethod
     def multivalue_model(cls, field):
+        pool = Pool()
         if field == 'distribution_in_sequence':
-            return Pool().get('stock.configuration.sequence')
+            return pool.get('stock.configuration.sequence')
         return super(Configuration, cls).multivalue_model(field)
+
+    default_distribution_in_sequence = default_func('distribution_in_sequence')
 
 
 class ConfigurationSequence(metaclass=PoolMeta):
@@ -36,17 +37,15 @@ class ConfigurationSequence(metaclass=PoolMeta):
                         'sequence_type_distribution_in')),
             ],
         depends=['company'])
-    default_shipment_in_sequence = default_sequence('sequence_distribution_in')
 
     @classmethod
     def default_distribution_in_sequence(cls):
         pool = Pool()
-        Sequence = pool.get('ir.sequence')
         ModelData = pool.get('ir.model.data')
 
-        sequence_type_id = ModelData.get_id('stock_distribution_in',
-            'sequence_type_distribution_in')
-        sequences = Sequence.search([('sequence_type', '=', sequence_type_id)])
-        if sequences:
-            return sequences[0]
+        try:
+            return ModelData.get_id('stock_distribution_in',
+                'sequence_distribution_in')
+        except:
+            return None
 
