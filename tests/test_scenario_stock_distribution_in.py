@@ -106,8 +106,6 @@ class Test(unittest.TestCase):
         input_move.planned_date = today
         input_move.effective_date = today
         input_move.company = company
-        input_move.unit_price = Decimal('1')
-        input_move.currency = company.currency
         production1.click('wait')
         self.assertEqual(production1.state, 'waiting')
 
@@ -122,8 +120,6 @@ class Test(unittest.TestCase):
         input_move.planned_date = today
         input_move.effective_date = today
         input_move.company = company
-        input_move.unit_price = Decimal('1')
-        input_move.currency = company.currency
         production2.save()
         self.assertEqual(production2.state, 'draft')
 
