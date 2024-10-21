@@ -430,12 +430,12 @@ class DistributionLine(ModelSQL, ModelView):
         return [('move.' + clause[0],) + clause[1:]]
 
     def get_uom(self, name):
-        return self.move.uom.id
+        return self.move.unit.id
 
     @fields.depends('move', '_parent_move.distribution')
     def on_change_with_uom_digits(self, name=None):
-        if self.move and self.move.uom:
-            return self.move.uom.digits
+        if self.move and self.move.unit:
+            return self.move.unit.digits
         return 2
 
     @fields.depends('move', '_parent_move.distribution')
