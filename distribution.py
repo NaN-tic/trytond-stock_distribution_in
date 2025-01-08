@@ -217,7 +217,7 @@ class Distribution(Workflow, ModelSQL, ModelView):
                     line.location = target_location
                     lines.append(line)
 
-        Line.create([x._save_values for x in lines])
+        Line.create([x._save_values() for x in lines])
 
     @classmethod
     @ModelView.button
