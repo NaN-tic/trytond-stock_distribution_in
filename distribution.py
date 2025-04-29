@@ -6,8 +6,6 @@ from trytond.transaction import Transaction
 from trytond.i18n import gettext
 from trytond.exceptions import UserError
 
-__all__ = ['Distribution', 'DistributionLine', 'Move', 'Production', 'Location']
-
 STATES = [
     ('draft', 'Draft'),
     ('done', 'Done'),
@@ -324,7 +322,7 @@ class Distribution(Workflow, ModelSQL, ModelView):
                 if quantity > 0.0:
                     quantity = min(input_.quantity, quantity)
                     if quantity < input_.quantity:
-                        moves = input_.split(quantity, input_.uom, count=1)
+                        moves = input_.split(quantity, input_.unit, count=1)
                         for move in moves:
                             if move.quantity == quantity:
                                 break
