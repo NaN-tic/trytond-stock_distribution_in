@@ -5,6 +5,7 @@ from trytond.pool import PoolMeta, Pool
 from trytond.transaction import Transaction
 from trytond.i18n import gettext
 from trytond.exceptions import UserError
+from trytond.model.exceptions import ValidationError
 
 STATES = [
     ('draft', 'Draft'),
@@ -107,7 +108,7 @@ class Distribution(Workflow, ModelSQL, ModelView):
                 ('id', '!=', self.id),
                 ])
         if others:
-            raise UserError(gettext(
+            raise ValidationError(gettext(
                 'stock_distribution_in.other_draft_distribution',
                     distribution=others[0].rec_name,
                     warehouse=self.warehouse.rec_name,
