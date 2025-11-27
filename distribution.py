@@ -413,11 +413,11 @@ class DistributionLine(ModelSQL, ModelView):
 
     def check_production_location(self):
         if self.production and self.location:
-            raise UserError(gettext(
+            raise ValidationError(gettext(
                 'stock_distribution_in.only_production_or_location',
                     line=self.rec_name))
         if not self.production and not self.location:
-            raise UserError(gettext(
+            raise ValidationError(gettext(
                 'stock_distribution_in.empty_production_and_location',
                     line=self.rec_name))
 
