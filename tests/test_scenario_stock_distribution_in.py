@@ -155,7 +155,7 @@ class Test(unittest.TestCase):
         line1, line2, line3 = sorted(incoming_move.distribution_lines,
                                      key=lambda x: x.production.id
                                      if x.production else 1000)
-        self.assertEqual(line1.production.id, production1.id)
+        self.assertEqual(line1.production, production1)
         self.assertEqual(line1.quantity, 5.0)
         self.assertEqual(line2.production, production2)
         self.assertEqual(line2.quantity, 3.0)
