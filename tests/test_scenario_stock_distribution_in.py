@@ -152,9 +152,7 @@ class Test(unittest.TestCase):
         distribution.moves.append(incoming_move)
         distribution.click('distribute')
         incoming_move.reload()
-        line1, line2, line3 = sorted(incoming_move.distribution_lines,
-                                     key=lambda x: x.production.id
-                                     if x.production else 1000)
+        line1, line2, line3 = incoming_move.distribution_lines
         self.assertEqual(line1.production, production1)
         self.assertEqual(line1.quantity, 5.0)
         self.assertEqual(line2.production, production2)
