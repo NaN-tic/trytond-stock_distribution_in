@@ -129,7 +129,7 @@ class Test(unittest.TestCase):
         purchase = Purchase()
         purchase.party = supplier
         purchase.payment_term = payment_term
-        purchase.invoice_method = 'shipment'
+        purchase.invoice_method = 'fulfillment'
         purchase_line = PurchaseLine()
         purchase.lines.append(purchase_line)
         purchase_line.product = product
