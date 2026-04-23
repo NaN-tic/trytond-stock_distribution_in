@@ -1,6 +1,7 @@
 import datetime
 import unittest
 from decimal import Decimal
+from unittest.mock import patch
 
 from proteus import Model
 from trytond.exceptions import UserError
@@ -10,6 +11,7 @@ from trytond.modules.account.tests.tools import (create_chart,
 from trytond.modules.account_invoice.tests.tools import (
     create_payment_term, set_fiscalyear_invoice_sequences)
 from trytond.modules.company.tests.tools import create_company, get_company
+from trytond.modules.stock.move import Move as StockMoveModel
 from trytond.tests.test_tryton import drop_db
 from trytond.tests.tools import activate_modules
 
@@ -25,6 +27,9 @@ class Test(unittest.TestCase):
         super().tearDown()
 
     def test(self):
+        _ = patch.object(
+            StockMoveModel, 'on_change_with_assignation_required',
+            return_value=False).start()
 
         today = datetime.date.today()
 
