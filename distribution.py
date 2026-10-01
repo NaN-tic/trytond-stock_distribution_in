@@ -115,16 +115,16 @@ class Distribution(Workflow, ModelSQL, ModelView):
                     ))
 
     @classmethod
-    def create(cls, vlist):
+    def preprocess_values(cls, mode, values):
+        values = super().preprocess_values(mode, values)
+        if mode != 'create' or values.get('number') is not None:
+            return values
+
         pool = Pool()
         Config = pool.get('stock.configuration')
-
-        vlist = [x.copy() for x in vlist]
         config = Config(1)
-        for values in vlist:
-            if values.get('number') is None:
-                values['number'] = config.distribution_in_sequence.get()
-        return super(Distribution, cls).create(vlist)
+        values['number'] = config.distribution_in_sequence.get()
+        return values
 
     @classmethod
     def copy(cls, distributions, default=None):

@@ -1,7 +1,7 @@
 from trytond.model import fields
 from trytond.pyson import Eval, Id
 from trytond.pool import PoolMeta, Pool
-from trytond.modules.stock.configuration import default_func, default_sequence
+from trytond.modules.stock.configuration import default_func
 
 __all__ = ['Configuration', 'ConfigurationSequence']
 
@@ -48,4 +48,3 @@ class ConfigurationSequence(metaclass=PoolMeta):
                 'sequence_distribution_in')
         except:
             return None
-
