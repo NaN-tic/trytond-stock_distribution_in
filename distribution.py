@@ -312,7 +312,9 @@ class Distribution(Workflow, ModelSQL, ModelView):
                 })
 
         productions = Production.browse(inputs.keys())
-        Production.wait(productions)
+        # Waiting again resets existing reservations and completed inputs.
+        # Only draft productions need to enter the waiting state.
+        Production.wait([p for p in productions if p.state == 'draft'])
         to_assign = []
         move_quantities = {}
         for production in productions:
@@ -331,6 +333,9 @@ class Distribution(Workflow, ModelSQL, ModelView):
                         move = input_
                     move.from_location = (
                         production.warehouse.input_location.id)
+                    if not move.on_change_with_unit_price_required():
+                        move.currency = None
+                        move.unit_price = None
                     move.save()
                     to_assign.append(move)
                     move_quantities[move.id] = move.quantity
