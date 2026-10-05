@@ -101,7 +101,16 @@ class Test(unittest.TestCase):
 
         # Create one production in wait state
         Production = Model.get('production')
+        StockMove = Model.get('stock.move')
         production1 = Production()
+        reserved_move = production1.inputs.new()
+        reserved_move.product = product
+        reserved_move.unit = unit
+        reserved_move.quantity = 2
+        reserved_move.from_location = storage_loc
+        reserved_move.to_location = production_loc
+        reserved_move.planned_date = today
+        reserved_move.company = company
         input_move = production1.inputs.new()
         input_move.product = product
         input_move.unit = unit
@@ -113,6 +122,13 @@ class Test(unittest.TestCase):
         input_move.company = company
         production1.click('wait')
         self.assertEqual(production1.state, 'waiting')
+        reserved_move, = [m for m in production1.inputs if m.quantity == 2]
+        # Keep an existing reservation alongside the pending input.
+        StockMove._proxy.write([reserved_move.id], {
+                'state': 'assigned',
+                }, config.context)
+        reserved_move.reload()
+        pending_move_id, = [m.id for m in production1.inputs if m.quantity == 5]
 
         # Create another production in draft state
         production2 = Production()
@@ -243,7 +259,12 @@ class Test(unittest.TestCase):
         # Check both productions have been reserved
         production1.reload()
         self.assertEqual(production1.state, 'assigned')
-        self.assertEqual(production1.inputs[0].state, 'done')
+        self.assertEqual(StockMove(pending_move_id).state, 'done')
+        reserved_move.reload()
+        self.assertEqual(reserved_move.state, 'assigned')
+        self.assertEqual(reserved_move.quantity, 2)
+        self.assertEqual(reserved_move.from_location, storage_loc)
+        self.assertEqual(reserved_move.to_location, production_loc)
 
         production2.reload()
         self.assertEqual(production2.state, 'assigned')
