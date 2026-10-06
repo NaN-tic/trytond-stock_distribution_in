@@ -126,7 +126,7 @@ class Test(unittest.TestCase):
         # Keep an existing reservation alongside the pending input.
         StockMove._proxy.write([reserved_move.id], {
                 'state': 'assigned',
-                }, config.context)
+                }, {**config.context, '_check_access': False})
         reserved_move.reload()
         pending_move_id, = [m.id for m in production1.inputs if m.quantity == 5]
 
